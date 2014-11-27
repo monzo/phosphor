@@ -39,6 +39,7 @@ func (f *forwarder) work() {
 	var i int
 
 	metricsTick := time.NewTicker(5 * time.Second)
+	timeoutTick := time.NewTicker(2 * time.Second)
 
 	for {
 		// log.Debugf("[Forwarder %v] Waiting for message", f.id)
@@ -54,6 +55,8 @@ func (f *forwarder) work() {
 			if len(f.messageBuffer) >= f.bufferSize {
 				f.send()
 			}
+		case <-timeoutTick.C:
+			f.send()
 		case <-metricsTick.C:
 			log.Debugf("[Forwarder %v] Processed %v messages", f.id, i)
 			// i = 0
