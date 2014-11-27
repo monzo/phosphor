@@ -7,6 +7,8 @@ import (
 	"time"
 
 	log "github.com/cihub/seelog"
+
+	"github.com/bankpossible/iamdev/phosphord/forwarder"
 )
 
 const (
@@ -16,6 +18,9 @@ const (
 var (
 	packetSize  = 512
 	bindAddress = "0.0.0.0:8130"
+
+	numForwarders = 20
+	bufferSize    = 200
 )
 
 func main() {
@@ -23,14 +28,21 @@ func main() {
 
 	// @todo parse flags
 
-	if err := listen(); err != nil {
+	// Make a channel to pass around trace frames
+	ch := make(chan []byte)
+
+	// Fire up a number of forwarders to process inbound messages
+	forwarder.Start(ch, numForwarders, bufferSize)
+
+	// Bind and listen to UDP traffic
+	if err := listen(ch); err != nil {
 		os.Exit(1)
 	}
 
 }
 
 // listen on a UDP socket for trace frames
-func listen() error {
+func listen(ch chan []byte) error {
 
 	// Resolve bind address
 	address, err := net.ResolveUDPAddr(UDP, bindAddress)
@@ -47,26 +59,24 @@ func listen() error {
 	}
 	defer listener.Close()
 
-	// Make a channel
-	ch := make(chan []byte)
-
-	// Listening loop
+	// Listen loop
 	log.Infof("Listening on %s for UDP trace frames", address.String())
 	for {
 		message := make([]byte, packetSize)
-		n, remaddr, error := listener.ReadFrom(message)
+		n, _, error := listener.ReadFrom(message)
 		if error != nil {
 			continue
 		}
 		buf := bytes.NewBuffer(message[0:n])
-		log.Infof("Packet received from %s: %s", remaddr, string(message[0:n]))
+		// log.Infof("Packet received from %s: %s", remaddr, string(message[0:n]))
 
 		// Attempt to push into our channel to be processed by a worker
 		select {
 		case ch <- buf.Bytes():
+			// log.Infof("Wrote message to channel")
 		default:
 			// abort!
-			log.Infof("Dropped message")
+			// log.Infof("Dropped message")
 		}
 	}
 }
