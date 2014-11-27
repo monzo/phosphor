@@ -2,9 +2,9 @@ package main
 
 import (
 	"bytes"
-	"fmt"
 	"net"
 	"os"
+	"time"
 
 	log "github.com/cihub/seelog"
 )
@@ -19,7 +19,7 @@ var (
 )
 
 func main() {
-	log.Infof("Phosphor started up")
+	log.Infof("Phosphor started at %v", time.Now())
 
 	// @todo parse flags
 
