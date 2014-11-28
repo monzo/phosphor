@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"net"
 	"os"
+	"runtime"
 	"time"
 
 	log "github.com/cihub/seelog"
@@ -24,7 +25,10 @@ var (
 )
 
 func main() {
-	log.Infof("Phosphor started at %v", time.Now())
+	log.Infof("Phosphor started at %v using %v CPUs", time.Now(), runtime.NumCPU())
+
+	// Use ALL the CPUs so that Go's scheduler can do magic
+	runtime.GOMAXPROCS(runtime.NumCPU())
 
 	// @todo parse flags
 
