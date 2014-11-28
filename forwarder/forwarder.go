@@ -1,9 +1,17 @@
 package forwarder
 
 import (
+	"encoding/json"
 	"time"
 
 	log "github.com/cihub/seelog"
+	"github.com/golang/protobuf/proto"
+
+	pb "github.com/bankpossible/iamdev/shared/messages"
+)
+
+var (
+	debug = true
 )
 
 func Start(traceChan chan []byte, numWorkers, bufferSize int) {
@@ -37,6 +45,8 @@ func (f *forwarder) work() {
 
 	var b []byte
 	var i int
+	var decoded *pb.TraceFrame
+	var js []byte
 
 	metricsTick := time.NewTicker(5 * time.Second)
 	timeoutTick := time.NewTicker(2 * time.Second)
@@ -46,7 +56,17 @@ func (f *forwarder) work() {
 		select {
 		case b = <-f.ch:
 			i++
-			// log.Debugf("[Forwarder %v] Received message", f.id)
+
+			// Log the frame if we're in debug mode
+			if debug {
+				decoded = &pb.TraceFrame{}
+				if err := proto.Unmarshal(b, decoded); err != nil {
+					log.Infof("[Forwarder %v] Couldn't decode trace frame", f.id)
+					continue
+				}
+				js, _ = json.Marshal(decoded)
+				log.Infof("[Forwarder %v] Received message: %s", f.id, string(js))
+			}
 
 			// Add message to our buffer
 			f.messageBuffer = append(f.messageBuffer, b)
@@ -59,7 +79,6 @@ func (f *forwarder) work() {
 			f.send()
 		case <-metricsTick.C:
 			log.Debugf("[Forwarder %v] Processed %v messages", f.id, i)
-			// i = 0
 		}
 	}
 }
