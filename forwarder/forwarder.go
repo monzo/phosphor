@@ -52,7 +52,6 @@ func (f *forwarder) work() {
 	timeoutTick := time.NewTicker(2 * time.Second)
 
 	for {
-		// log.Debugf("[Forwarder %v] Waiting for message", f.id)
 		select {
 		case b = <-f.ch:
 			i++
