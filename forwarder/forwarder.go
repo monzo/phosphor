@@ -10,10 +10,6 @@ import (
 	pb "github.com/bankpossible/iamdev/shared/messages"
 )
 
-var (
-	debug = true
-)
-
 func Start(traceChan chan []byte, numWorkers, bufferSize int) {
 
 	log.Infof("Starting %v forwarders with buffer size of %v", numWorkers, bufferSize)
@@ -57,15 +53,13 @@ func (f *forwarder) work() {
 			i++
 
 			// Log the frame if we're in debug mode
-			if debug {
-				decoded = &pb.TraceFrame{}
-				if err := proto.Unmarshal(b, decoded); err != nil {
-					log.Infof("[Forwarder %v] Couldn't decode trace frame", f.id)
-					continue
-				}
-				js, _ = json.Marshal(decoded)
-				log.Infof("[Forwarder %v] Received message: %s", f.id, string(js))
+			decoded = &pb.TraceFrame{}
+			if err := proto.Unmarshal(b, decoded); err != nil {
+				log.Warnf("[Forwarder %v] Couldn't decode trace frame", f.id)
+				continue
 			}
+			js, _ = json.Marshal(decoded)
+			log.Tracef("[Forwarder %v] Received message: %s", f.id, string(js))
 
 			// Add message to our buffer
 			f.messageBuffer = append(f.messageBuffer, b)
@@ -77,14 +71,14 @@ func (f *forwarder) work() {
 		case <-timeoutTick.C:
 			f.send()
 		case <-metricsTick.C:
-			log.Debugf("[Forwarder %v] Processed %v messages", f.id, i)
+			log.Tracef("[Forwarder %v] Processed %v messages", f.id, i)
 		}
 	}
 }
 
 func (f *forwarder) send() {
 
-	log.Infof("[Forwarder %v] Sent %v messages", f.id, len(f.messageBuffer))
+	log.Debugf("[Forwarder %v] Sent %v messages", f.id, len(f.messageBuffer))
 
 	// Empty the buffer
 	f.messageBuffer = nil
