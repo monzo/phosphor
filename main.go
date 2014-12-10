@@ -6,6 +6,7 @@ import (
 	"net"
 	"os"
 	"runtime"
+	"strings"
 	"time"
 
 	log "github.com/cihub/seelog"
@@ -102,9 +103,13 @@ func initialiseLogger() {
 	}
 
 	// Build config for seelog
-	logConfig := fmt.Sprintf(`<seelog minlevel="%s"><outputs formatid="main"><console/></outputs></seelog>`, logLevel)
+	logConfig := fmt.Sprintf(`<seelog minlevel="%s">`, logLevel)
+	logConfig = strings.Join([]string{logConfig, `<outputs formatid="main"><console/></outputs><formats><format id="main" format="%Date %Time [%LEV] %Msg (%File %Line)%n"/></formats></seelog>`}, "")
 
 	// Initialise the logger!
-	logger, _ := log.LoggerFromConfigAsBytes([]byte(logConfig))
+	logger, err := log.LoggerFromConfigAsBytes([]byte(logConfig))
+	if err != nil {
+		log.Errorf("Couldn't initialise new logger: ", err)
+	}
 	log.ReplaceLogger(logger)
 }
