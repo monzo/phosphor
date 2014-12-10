@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"net"
 	"os"
 	"runtime"
@@ -22,9 +23,16 @@ var (
 
 	numForwarders = 20
 	bufferSize    = 200
+
+	// logLevel default set to info and above
+	defaultLogLevel = "info"
 )
 
 func main() {
+
+	// Set up the logger, using the log level set by the environment
+	initialiseLogger()
+
 	log.Infof("Phosphor started at %v using %v CPUs", time.Now(), runtime.NumCPU())
 
 	// Use ALL the CPUs so that Go's scheduler can do magic
@@ -83,4 +91,20 @@ func listen(ch chan []byte) error {
 			// log.Infof("Dropped message")
 		}
 	}
+}
+
+func initialiseLogger() {
+
+	// Attempt to pull log level from env, if not set to default level
+	logLevel := os.Getenv("LOG_LEVEL")
+	if logLevel == "" {
+		logLevel = defaultLogLevel
+	}
+
+	// Build config for seelog
+	logConfig := fmt.Sprintf(`<seelog minlevel="%s"><outputs formatid="main"><console/></outputs></seelog>`, logLevel)
+
+	// Initialise the logger!
+	logger, _ := log.LoggerFromConfigAsBytes([]byte(logConfig))
+	log.ReplaceLogger(logger)
 }
