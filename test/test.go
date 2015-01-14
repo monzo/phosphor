@@ -36,8 +36,8 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Println("Encoded: %s", string(b))
-	fmt.Println("Encoded bytes: %v", b)
+	fmt.Printf("Encoded: %s\n", string(b))
+	fmt.Printf("Encoded bytes: %v\n", b)
 
 	// Send via UDP!
 

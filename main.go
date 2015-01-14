@@ -109,7 +109,7 @@ func initialiseLogger() {
 	// Initialise the logger!
 	logger, err := log.LoggerFromConfigAsBytes([]byte(logConfig))
 	if err != nil {
-		log.Errorf("Couldn't initialise new logger: ", err)
+		log.Errorf("Couldn't initialise new logger: %s", err)
 	}
 	log.ReplaceLogger(logger)
 }
