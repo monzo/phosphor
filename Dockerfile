@@ -4,7 +4,9 @@ FROM bankpossible/shared:latest
 ENV GOPATH /code
 ENV PATH /code/bin:/usr/src/go/bin:/usr/local/go/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games
 
-ADD . /code/src/github.com/bankpossible/iamdev/phosphord
-RUN chmod -R a+rwx /code/src/github.com/bankpossible/iamdev/phosphord
-WORKDIR /code/src/github.com/bankpossible/iamdev/phosphord
-RUN go get -v
+# Our precompiler will build the binary and move it into position before we
+# start the container. We can then add this into the container.
+ADD ./_workspace /code
+
+# Execute our precompiled binary!
+RUN /code/bin/phosphord
