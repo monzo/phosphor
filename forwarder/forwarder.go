@@ -5,7 +5,7 @@ import (
 	"time"
 
 	log "github.com/cihub/seelog"
-	"github.com/golang/protobuf/proto"
+	"github.com/mattheath/goprotobuf/proto"
 
 	pb "github.com/bankpossible/iamdev/shared/messages"
 )
