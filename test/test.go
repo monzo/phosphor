@@ -18,8 +18,8 @@ func main() {
 	// Make example trace frame
 	t := &pb.TraceFrame{
 		TraceId:         proto.String("aasldjaskjdlsakjdkasjdklasjdlasjdkljdas"),
-		MessageId:       proto.String("8yf8sdg76sg897b98fbuys8b9s6rvs6ducghkfhi27tuw"),
-		ParentMessageId: proto.String("8yf8sdg76sg897b98fbuys8b9s6rvs6ducghkfhi27tuw"),
+		RequestId:       proto.String("8yf8sdg76sg897b98fbuys8b9s6rvs6ducghkfhi27tuw"),
+		ParentRequestId: proto.String("8yf8sdg76sg897b98fbuys8b9s6rvs6ducghkfhi27tuw"),
 		Type:            proto.String("CLIENT_IN"),
 		Timestamp:       proto.String(""),
 		Duration:        proto.Int64(1231312),
