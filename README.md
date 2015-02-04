@@ -8,3 +8,11 @@ It is comprised of a few simple components:
  - Phosphor Daemon, collects traces and forwards onto the main server
  - Phosphor Server, stores traces and aggregated trace information
  - Phosphor UI, view trace and debug information about your infrastructure
+
+## Dependencies
+
+Query Transport:
+ - HTTP or RabbitMQ / AMQP
+
+Delivery Queuing:
+ - NSQ
