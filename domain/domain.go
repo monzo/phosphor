@@ -20,11 +20,11 @@ const (
 	Annotation = EventType(5)
 )
 
-// An Event represents a section of an RPC call between systems
+// A Event represents a section of an RPC call between systems
 type Event struct {
-	TraceId       string // Global Trace Identifier
-	EventId       string // Identifier for this event, non unique - eg. RPC calls would have 4 of these
-	ParentEventId string // Parent event - eg. nested RPC calls
+	TraceId      string // Global Trace Identifier
+	SpanId       string // Identifier for this span, non unique - eg. RPC calls would have 4 events with this id
+	ParentSpanId string // Parent span - eg. nested RPC calls
 
 	Timestamp time.Time     // Timestamp the event occured, can only be compared on the same machine
 	Duration  time.Duration // Optional: duration of the event, eg. RPC call
