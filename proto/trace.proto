@@ -1,0 +1,62 @@
+package proto;
+
+message TraceFrame {
+
+  // The ID of the trace this frame is a component of
+  required string trace_id = 1;
+
+  // The span this trace corresponds to, in the case this
+  // is representing a service (REQ/REP) call
+  optional string span_id = 2;
+
+  // The parent span this trace corresponds to, allowing us
+  // to correlate trace frames and reconstruct the request
+  optional string parent_id = 3;
+
+  // The type of trace frame we're capturing
+  required FrameType type = 4;
+
+  // Time since the epoch in nanoseconds
+  //
+  // 64bit time in nanoseconds with the default unix epoch gives us the following range:
+  // Min time: 1677-09-21 00:12:43.145224192 +0000 UTC
+  // Max time: 2262-04-11 23:47:16.854775807 +0000 UTC
+  required int64 timestamp = 5;
+
+  // Duration in nanoseconds
+  // This should only be used to measure time on the same node
+  // eg. the duration of service / rpc calls
+  optional int64 duration = 6;
+
+  // Machine hostname, container name etc
+  optional string hostname = 7;
+
+  // Origin of this frame, likely a service
+  optional string origin = 8;
+
+  // Destination of this frame's action
+  // eg. the service which a request was destined for
+  // likely not set for annotations
+  optional string destination = 9;
+
+  // Payload as a string - eg. JSON encoded
+  optional string payload = 10;
+
+  // Repeated series of key value fields for arbitrary data
+  repeated KeyValue key_value = 11;
+}
+
+enum FrameType {
+	UNKNOWN = 0;
+	REQ = 1;
+	REP = 2;
+	IN = 3;
+	OUT = 4;
+	TIMEOUT = 5;
+	ANNOTATION = 6;
+}
+
+message KeyValue {
+	required string key = 1;
+	optional string value = 2;
+}
