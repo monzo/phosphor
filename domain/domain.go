@@ -11,13 +11,14 @@ type FrameType int
 
 const (
 	// Calls
-	Req = FrameType(1) // Client Request dispatch
-	Rsp = FrameType(2) // Client Response received
-	In  = FrameType(3) // Server Request received
-	Out = FrameType(4) // Server Response dispatched
+	Req     = FrameType(1) // Client Request dispatch
+	Rsp     = FrameType(2) // Client Response received
+	In      = FrameType(3) // Server Request received
+	Out     = FrameType(4) // Server Response dispatched
+	Timeout = FrameType(5) // Client timed out waiting
 
 	// Developer initiated annotations
-	Annotation = FrameType(5)
+	Annotation = FrameType(6)
 )
 
 // A Frame represents the smallest individually fired component of a trace
