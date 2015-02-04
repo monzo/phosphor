@@ -3,27 +3,28 @@ package domain
 import "time"
 
 // Trace represents a full trace of a request
-// comprised of a number of events and annotations
-type Trace []Event
+// comprised of a number of frames
+type Trace []Frame
 
-// EventType represents an Enum of types of Events which Phosphor can record
-type EventType int
+// FrameType represents an Enum of types of Events which Phosphor can record
+type FrameType int
 
 const (
-	// RPC Calls
-	Req = EventType(1) // Client Request dispatch
-	Rsp = EventType(2) // Client Response received
-	In  = EventType(3) // Server Request received
-	Out = EventType(4) // Server Response dispatched
+	// Calls
+	Req = FrameType(1) // Client Request dispatch
+	Rsp = FrameType(2) // Client Response received
+	In  = FrameType(3) // Server Request received
+	Out = FrameType(4) // Server Response dispatched
 
 	// Developer initiated annotations
-	Annotation = EventType(5)
+	Annotation = FrameType(5)
 )
 
-// A Event represents a section of an RPC call between systems
-type Event struct {
+// A Frame represents the smallest individually fired component of a trace
+// These can be assembled into spans, and entire traces of a request to our systems
+type Frame struct {
 	TraceId      string // Global Trace Identifier
-	SpanId       string // Identifier for this span, non unique - eg. RPC calls would have 4 events with this id
+	SpanId       string // Identifier for this span, non unique - eg. RPC calls would have 4 frames with this id
 	ParentSpanId string // Parent span - eg. nested RPC calls
 
 	Timestamp time.Time     // Timestamp the event occured, can only be compared on the same machine
