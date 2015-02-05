@@ -10,6 +10,8 @@ type Trace []Frame
 type FrameType int32
 
 const (
+	UnknownFrameType = FrameType(0) // No idea...
+
 	// Calls
 	Req     = FrameType(1) // Client Request dispatch
 	Rsp     = FrameType(2) // Client Response received
@@ -35,7 +37,7 @@ type Frame struct {
 	Origin      string // Fully qualified name of the message origin
 	Destination string // Optional: Fully qualified name of the message destination
 
-	EventType EventType // The type of Event
+	FrameType FrameType // The type of Frame
 
 	Payload     string            // The payload, eg. RPC body, or Annotation
 	PayloadSize int32             // Bytes of payload
