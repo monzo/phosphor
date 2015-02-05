@@ -6,8 +6,8 @@ import "time"
 // comprised of a number of frames
 type Trace []Frame
 
-// FrameType represents an Enum of types of Events which Phosphor can record
-type FrameType int
+// FrameType represents an Enum of types of Frames which Phosphor can record
+type FrameType int32
 
 const (
 	// Calls
