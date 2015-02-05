@@ -24,8 +24,8 @@ func New() *MemoryStore {
 	return s
 }
 
-// GetTrace retrieves a full Trace, composed of Frames from the store by ID
-func (s *MemoryStore) GetTrace(id string) (domain.Trace, error) {
+// ReadTrace retrieves a full Trace, composed of Frames from the store by ID
+func (s *MemoryStore) ReadTrace(id string) (domain.Trace, error) {
 	s.RLock()
 	defer s.RUnlock()
 
