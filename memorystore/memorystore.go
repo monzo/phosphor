@@ -4,6 +4,8 @@ import (
 	"sync"
 	"time"
 
+	log "github.com/cihub/seelog"
+
 	"github.com/mattheath/phosphor/domain"
 )
 
