@@ -7,6 +7,12 @@ import (
 	"github.com/mattheath/phosphor/domain"
 )
 
+type MemoryStore struct {
+	sync.RWMutex
+	store map[string]domain.Trace
+}
+
+// New initialises and returns a new MemoryStore
 func New() *MemoryStore {
 	s := &MemoryStore{
 		store: make(map[string]domain.Trace),
@@ -18,11 +24,7 @@ func New() *MemoryStore {
 	return s
 }
 
-type MemoryStore struct {
-	sync.RWMutex
-	store map[string]domain.Trace
-}
-
+// GetTrace retrieves a full Trace, composed of Frames from the store by ID
 func (s *MemoryStore) GetTrace(id string) (domain.Trace, error) {
 	s.RLock()
 	defer s.RUnlock()
@@ -30,6 +32,8 @@ func (s *MemoryStore) GetTrace(id string) (domain.Trace, error) {
 	return s.store[id], nil
 }
 
+// StoreTraceFrame into the store, if the trace doesn't not already exist
+// this will be created for the global trace ID
 func (s *MemoryStore) StoreTraceFrame(f domain.Frame) error {
 	s.Lock()
 	defer s.Unlock()
@@ -46,6 +50,7 @@ func (s *MemoryStore) StoreTraceFrame(f domain.Frame) error {
 	return nil
 }
 
+// statsLoop loops and outputs stats every 5 seconds
 func (s *MemoryStore) statsLoop() {
 
 	tick := time.NewTicker(5 * time.Second)
@@ -58,6 +63,7 @@ func (s *MemoryStore) statsLoop() {
 	}
 }
 
+// printStats about the status of the memorystore to stdout
 func (s *MemoryStore) printStats() {
 
 	// Get some data while under the mutex
