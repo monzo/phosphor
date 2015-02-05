@@ -33,7 +33,7 @@ type Frame struct {
 
 	Hostname    string // Hostname this event originated from
 	Origin      string // Fully qualified name of the message origin
-	Destination string // Fully qualified name of the message destination
+	Destination string // Optional: Fully qualified name of the message destination
 
 	EventType EventType // The type of Event
 
