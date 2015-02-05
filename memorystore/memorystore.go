@@ -35,13 +35,13 @@ func (s *MemoryStore) StoreTraceFrame(f domain.Frame) error {
 	defer s.Unlock()
 
 	// Load our current trace
-	t := s.store[e.TraceId]
+	t := s.store[f.TraceId]
 
 	// Add the new frame to this
 	t = append(t, f)
 
 	// Store it back
-	s.store[e.TraceId] = t
+	s.store[f.TraceId] = t
 
 	return nil
 }
