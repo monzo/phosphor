@@ -2,14 +2,20 @@ package memorystore
 
 import (
 	"sync"
+	"time"
 
 	"github.com/mattheath/phosphor/domain"
 )
 
 func New() *MemoryStore {
-	return &MemoryStore{
+	s := &MemoryStore{
 		store: make(map[string]domain.Trace),
 	}
+
+	// run stats worker
+	go s.statsLoop()
+
+	return s
 }
 
 type MemoryStore struct {
@@ -38,4 +44,27 @@ func (s *MemoryStore) StoreTraceFrame(f domain.Frame) error {
 	s.store[e.TraceId] = t
 
 	return nil
+}
+
+func (s *MemoryStore) statsLoop() {
+
+	tick := time.NewTicker(5 * time.Second)
+
+	// @todo listen for shutdown, stop ticker and exit cleanly
+	for {
+		<-tick.C // block until tick
+
+		s.printStats()
+	}
+}
+
+func (s *MemoryStore) printStats() {
+
+	// Get some data while under the mutex
+	s.RLock()
+	count := len(s.store)
+	s.RUnlock()
+
+	// Separate processing and logging outside of mutex
+	log.Infof("[Phosphor] Traces stored: %v", count)
 }
