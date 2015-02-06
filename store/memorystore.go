@@ -28,6 +28,10 @@ func NewMemoryStore() *MemoryStore {
 
 // ReadTrace retrieves a full Trace, composed of Frames from the store by ID
 func (s *MemoryStore) ReadTrace(id string) (*domain.Trace, error) {
+	if s == nil {
+		return nil, ErrStoreNotInitialised
+	}
+
 	s.RLock()
 	defer s.RUnlock()
 
@@ -39,6 +43,16 @@ func (s *MemoryStore) ReadTrace(id string) (*domain.Trace, error) {
 func (s *MemoryStore) StoreFrame(f *domain.Frame) error {
 	s.Lock()
 	defer s.Unlock()
+
+	if s == nil {
+		return ErrStoreNotInitialised
+	}
+	if f == nil {
+		return ErrNilFrame
+	}
+	if f.TraceId == "" {
+		return ErrInvalidTraceId
+	}
 
 	// Load our current trace
 	t := s.store[f.TraceId]
