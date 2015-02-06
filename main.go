@@ -28,13 +28,13 @@ func main() {
 	flag.Parse()
 
 	// Initialise a persistent store
-	store := store.NewMemoryStore()
+	st := store.NewMemoryStore()
 
 	// Initialise trace ingestion
-	go ingester.Run(nsqLookupdHTTPAddrs, store)
+	go ingester.Run(nsqLookupdHTTPAddrs, st)
 
 	// Set up API and serve requests
-	handler.DefaultStore = store
+	handler.DefaultStore = st
 	http.HandleFunc("/", handler.Index)
 	http.HandleFunc("/trace", handler.TraceLookup)
 	http.ListenAndServe(fmt.Sprintf(":%v", HTTPPort), nil)
