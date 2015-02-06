@@ -48,7 +48,7 @@ func (s *MemoryStore) StoreFrame(f *domain.Frame) error {
 		return ErrStoreNotInitialised
 	}
 	if f == nil {
-		return ErrNilFrame
+		return ErrInvalidFrame
 	}
 	if f.TraceId == "" {
 		return ErrInvalidTraceId
