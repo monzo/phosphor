@@ -1,10 +1,36 @@
 package domain
 
-import "time"
+import (
+	"errors"
+	"sync"
+	"time"
+)
+
+// NewTrace initialises and returns a new Trace
+func NewTrace() *Trace {
+	return &Trace{
+		frames: make([]*Frame, 0),
+	}
+}
 
 // Trace represents a full trace of a request
 // comprised of a number of frames
-type Trace []Frame
+type Trace struct {
+	sync.Mutex
+
+	frames []*Frame
+}
+
+// AppendFrame to a Trace
+func (t *Trace) AppendFrame(f *Frame) error {
+	if t == nil {
+		return errors.New("Slice is Nil")
+	}
+
+	t.frames = append(t.frames, f)
+
+	return nil
+}
 
 // FrameType represents an Enum of types of Frames which Phosphor can record
 type FrameType int32
