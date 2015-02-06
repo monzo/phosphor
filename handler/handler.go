@@ -35,6 +35,7 @@ func TraceLookup(w http.ResponseWriter, r *http.Request) {
 	// If we don't find the trace return 404
 	if t == nil {
 		errorResponse(w, http.StatusNotFound, errors.New("traceId not found"))
+		return
 	}
 
 	// Return trace
