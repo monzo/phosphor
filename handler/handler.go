@@ -68,10 +68,10 @@ func writeResponse(w http.ResponseWriter, code int, resp interface{}) {
 	b, err := json.Marshal(resp)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprintln(w, []byte(`{"error":"failed to marshal json"}`))
+		fmt.Fprintln(w, `{"error":"failed to marshal json"}`)
 		return
 	}
 
 	w.WriteHeader(code)
-	fmt.Fprintln(w, b)
+	fmt.Fprintln(w, string(b))
 }
