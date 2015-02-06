@@ -21,4 +21,4 @@ This system is currently in development, and some components are not yet open so
 
 ## Thanks
 
-Phosphor was based on a similar systems built internally at [Hailo](https://hailoapp.com), and developed by @mattheath with the support of [Starling](https://starlingbank.co.uk).
+Phosphor was based on a similar systems built internally at [Hailo](https://hailoapp.com), and developed by Matt Heath ([@mattheath](https://github.com/mattheath)) with the support of [Starling](https://starlingbank.co.uk).
