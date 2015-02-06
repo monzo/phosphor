@@ -10,7 +10,7 @@ import (
 	"github.com/mattheath/phosphor/util"
 )
 
-var APIPort = 7772
+var HTTPPort = 7750
 
 var nsqLookupdHTTPAddrs = util.StringArray{}
 
