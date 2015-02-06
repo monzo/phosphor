@@ -9,6 +9,8 @@ It is comprised of a few simple components:
  - Phosphor Server, stores traces and aggregated trace information
  - Phosphor UI, view trace and debug information about your infrastructure
 
+![Phosphor Architecture](docs/phosphor/outline.png)
+
 ## Dependencies
 
 Query Transport:
