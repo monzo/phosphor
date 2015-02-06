@@ -14,10 +14,13 @@ import (
 // DefaultStore is a reference to our persistence layer which we can query
 var DefaultStore store.Store
 
+// Index
+// @todo return version information etc
 func Index(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hi there, I'm Phosphor")
 }
 
+// TraceLookup retrieves a trace from the persistence layer
 func TraceLookup(w http.ResponseWriter, r *http.Request) {
 	traceId := r.URL.Query().Get("traceId")
 	if traceId == "" {
