@@ -9,6 +9,7 @@ import (
 	log "github.com/cihub/seelog"
 
 	"github.com/mattheath/phosphor/store"
+	"github.com/mattheath/phosphor/util"
 )
 
 // DefaultStore is a reference to our persistence layer which we can query
@@ -17,7 +18,11 @@ var DefaultStore store.Store
 // Index
 // @todo return version information etc
 func Index(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hi there, I'm Phosphor")
+	w.WriteHeader(http.StatusOK)
+	fmt.Fprintf(w, fmt.Sprintf(`{
+		"name": "phosphor",
+		"version": "%s"
+	}`, util.VERSION))
 }
 
 // TraceLookup retrieves a trace from the persistence layer
