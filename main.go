@@ -34,7 +34,7 @@ func main() {
 	go ingester.Run(nsqLookupdHTTPAddrs, store)
 
 	// Set up API and serve requests
-	handler.Store = store
+	handler.DefaultStore = store
 	http.HandleFunc("/", handler.Index)
 	http.HandleFunc("/trace", handler.TraceLookup)
 	http.ListenAndServe(fmt.Sprintf(":%v", HTTPPort), nil)

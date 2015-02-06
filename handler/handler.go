@@ -11,8 +11,8 @@ import (
 	"github.com/mattheath/phosphor/store"
 )
 
-// Store is a reference to our persistence layer which we can query
-var Store store.Store
+// DefaultStore is a reference to our persistence layer which we can query
+var DefaultStore store.Store
 
 func Index(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hi there, I'm Phosphor")
@@ -26,7 +26,7 @@ func TraceLookup(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Infof("Trace Lookup - TraceId: %s", traceId)
-	t, err := Store.ReadTrace(traceId)
+	t, err := DefaultStore.ReadTrace(traceId)
 	if err != nil {
 		errorResponse(w, http.StatusInternalServerError, fmt.Errorf("could not load trace: %s", err))
 		return
