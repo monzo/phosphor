@@ -1,4 +1,4 @@
-# Phosphor
+![](docs/logo.png)
 
 Phosphor is a distributed tracing system, in the same vein as Twitter's Zipkin and Google's Dapper.
 
