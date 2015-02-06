@@ -9,8 +9,8 @@ import (
 	"github.com/golang/protobuf/proto"
 
 	"github.com/mattheath/phosphor/domain"
-	"github.com/mattheath/phosphor/memorystore"
 	traceproto "github.com/mattheath/phosphor/proto"
+	"github.com/mattheath/phosphor/store"
 )
 
 var (
@@ -20,7 +20,7 @@ var (
 	maxInFlight = 200
 )
 
-func Run(nsqLookupdHTTPAddrs []string, store *memorystore.MemoryStore) {
+func Run(nsqLookupdHTTPAddrs []string, store *store.MemoryStore) {
 
 	cfg := nsq.NewConfig()
 	cfg.UserAgent = fmt.Sprintf("phosphor go-nsq/%s", nsq.VERSION)
