@@ -1,4 +1,4 @@
-package memorystore
+package store
 
 import (
 	"sync"
@@ -11,13 +11,13 @@ import (
 
 type MemoryStore struct {
 	sync.RWMutex
-	store map[string]domain.Trace
+	store map[string]*domain.Trace
 }
 
-// New initialises and returns a new MemoryStore
-func New() *MemoryStore {
+// NewMemoryStore initialises and returns a new MemoryStore
+func NewMemoryStore() *MemoryStore {
 	s := &MemoryStore{
-		store: make(map[string]domain.Trace),
+		store: make(map[string]*domain.Trace),
 	}
 
 	// run stats worker
@@ -27,7 +27,7 @@ func New() *MemoryStore {
 }
 
 // ReadTrace retrieves a full Trace, composed of Frames from the store by ID
-func (s *MemoryStore) ReadTrace(id string) (domain.Trace, error) {
+func (s *MemoryStore) ReadTrace(id string) (*domain.Trace, error) {
 	s.RLock()
 	defer s.RUnlock()
 
@@ -36,15 +36,20 @@ func (s *MemoryStore) ReadTrace(id string) (domain.Trace, error) {
 
 // StoreTraceFrame into the store, if the trace doesn't not already exist
 // this will be created for the global trace ID
-func (s *MemoryStore) StoreTraceFrame(f domain.Frame) error {
+func (s *MemoryStore) StoreFrame(f *domain.Frame) error {
 	s.Lock()
 	defer s.Unlock()
 
 	// Load our current trace
 	t := s.store[f.TraceId]
 
+	// Initialise a new trace if we don't have it already
+	if t == nil {
+		t = domain.NewTrace()
+	}
+
 	// Add the new frame to this
-	t = append(t, f)
+	t.AppendFrame(f)
 
 	// Store it back
 	s.store[f.TraceId] = t
