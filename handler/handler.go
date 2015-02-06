@@ -25,15 +25,17 @@ func TraceLookup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Infof("Trace Lookup - TraceId: %s", traceId)
+	log.Debugf("Trace lookup - TraceId: %s", traceId)
 	t, err := DefaultStore.ReadTrace(traceId)
 	if err != nil {
+		log.Errorf("Trace lookup failed: %s", err)
 		errorResponse(w, http.StatusInternalServerError, fmt.Errorf("could not load trace: %s", err))
 		return
 	}
 
 	// If we don't find the trace return 404
 	if t == nil {
+		log.Debugf("Trace not found: %s", traceId)
 		errorResponse(w, http.StatusNotFound, errors.New("traceId not found"))
 		return
 	}
