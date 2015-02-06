@@ -9,7 +9,7 @@ import (
 
 	"github.com/mattheath/phosphor/handler"
 	"github.com/mattheath/phosphor/ingester"
-	"github.com/mattheath/phosphor/memorystore"
+	"github.com/mattheath/phosphor/store"
 	"github.com/mattheath/phosphor/util"
 )
 
@@ -22,16 +22,19 @@ func init() {
 }
 
 func main() {
+	log.Infof("Phosphor starting up")
 	defer log.Flush()
 
 	flag.Parse()
 
-	log.Infof("Phosphor starting up")
+	// Initialise a persistent store
+	store := store.NewMemoryStore()
 
-	store := memorystore.New()
-
+	// Initialise trace ingestion
 	go ingester.Run(nsqLookupdHTTPAddrs, store)
 
+	// Set up API and serve requests
+	handler.Store = store
 	http.HandleFunc("/", handler.Index)
 	http.HandleFunc("/trace", handler.TraceLookup)
 	http.ListenAndServe(fmt.Sprintf(":%v", HTTPPort), nil)
