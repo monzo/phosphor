@@ -79,5 +79,5 @@ func (s *MemoryStore) printStats() {
 	s.RUnlock()
 
 	// Separate processing and logging outside of mutex
-	log.Infof("[Phosphor] Traces stored: %v", count)
+	log.Infof("[MemoryStore] Traces stored: %v", count)
 }
