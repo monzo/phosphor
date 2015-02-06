@@ -13,8 +13,4 @@ It is comprised of a few simple components:
 
 ## Dependencies
 
-Query Transport:
- - HTTP or RabbitMQ / AMQP
-
-Delivery Queuing:
- - NSQ
+ - NSQ is currently used as the delivery transport for traces between PhosphorD and the Phosphor Server
