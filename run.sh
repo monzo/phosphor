@@ -1,1 +1,0 @@
-figrun.sh
