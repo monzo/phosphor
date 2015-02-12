@@ -20,7 +20,7 @@ var (
 	maxInFlight = 200
 )
 
-func Run(nsqLookupdHTTPAddrs []string, store *store.MemoryStore) {
+func Run(nsqLookupdHTTPAddrs []string, st store.Store) {
 
 	cfg := nsq.NewConfig()
 	cfg.UserAgent = fmt.Sprintf("phosphor go-nsq/%s", nsq.VERSION)
