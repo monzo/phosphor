@@ -63,6 +63,7 @@ func main() {
 
 	// Bind and listen to UDP traffic
 	if err := listen(ch); err != nil {
+		log.Criticalf(err)
 		os.Exit(1)
 	}
 }
