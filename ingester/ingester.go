@@ -45,7 +45,9 @@ func Run(nsqLookupdHTTPAddrs []string, st store.Store) {
 }
 
 // IngestionHandler exists to match the NSQ handler interface
-type IngestionHandler struct{}
+type IngestionHandler struct {
+	s store.Store
+}
 
 // HandleMessage delivered by NSQ
 func (ih *IngestionHandler) HandleMessage(message *nsq.Message) error {
@@ -58,9 +60,11 @@ func (ih *IngestionHandler) HandleMessage(message *nsq.Message) error {
 		return nil
 	}
 
-	t := domain.FrameFromProto(p)
+	f := domain.FrameFromProto(p)
+	log.Debugf("Received trace frame: %+v", f)
 
-	log.Debugf("Received trace: %+v", t)
+	// Write to our store
+	ih.s.StoreFrame(f)
 
 	return nil
 }
