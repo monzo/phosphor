@@ -11,14 +11,14 @@ import (
 	"github.com/mattheath/phosphord/transport"
 )
 
-func Start(traceChan chan []byte, tr transport.Transport, numWorkers, bufferSize int) {
+func Start(traces chan []byte, tr transport.Transport, numWorkers, bufferSize int) {
 
 	log.Infof("Starting %v forwarders with buffer size of %v", numWorkers, bufferSize)
 
 	for i := 0; i < numWorkers; i++ {
 		f := &forwarder{
 			id:            i,
-			ch:            traceChan,
+			ch:            traces,
 			tr:            tr,
 			messageBuffer: make([][]byte, 0, bufferSize),
 			bufferSize:    bufferSize,
