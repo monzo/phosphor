@@ -18,16 +18,16 @@ func main() {
 
 	// Make example trace frame
 	t := &pb.TraceFrame{
-		TraceId:   proto.String("aasldjaskjdlsakjdkasjdklasjdlasjdkljdas"),
-		SpanId:    proto.String("8yf8sdg76sg897b98fbuys8b9s6rvs6ducghkfhi27tuw"),
-		ParentId:  proto.String("97as8d7s9a7a7dv32hrkqehfkuh23hq8d7h4g7iygs7ih"),
-		Type:      pb.FrameType_OUT,
-		Timestamp: proto.String(time.Now().UnixNano()),
-		Duration:  proto.Int64(1231312),
-		Hostname:  proto.String("somehostname"),
-		From:      proto.String("some.api"),
-		To:        proto.String("some.service"),
-		Payload:   proto.String(`{"boop":123}`),
+		TraceId:     proto.String("aasldjaskjdlsakjdkasjdklasjdlasjdkljdas"),
+		SpanId:      proto.String("8yf8sdg76sg897b98fbuys8b9s6rvs6ducghkfhi27tuw"),
+		ParentId:    proto.String("97as8d7s9a7a7dv32hrkqehfkuh23hq8d7h4g7iygs7ih"),
+		Type:        pb.FrameType_OUT.Enum(),
+		Timestamp:   proto.Int64(time.Now().UnixNano()),
+		Duration:    proto.Int64(1231312),
+		Hostname:    proto.String("somehostname"),
+		Origin:      proto.String("some.api"),
+		Destination: proto.String("some.service"),
+		Payload:     proto.String(`{"boop":123}`),
 	}
 
 	// Marshal to bytes
