@@ -57,16 +57,18 @@ func (p *NSQPublisher) MultiPublish(body [][]byte) error {
 
 	// Attempt up to our number of configured nodes
 	for attempt := 0; attempt < len(p.producers); attempt++ {
-		pd := p.producersIndex[i]
-		if err := pd.MultiPublish(p.topic, body); err == nil {
-			// success!
-			return nil
-		}
 
 		// Move to next host, or cycle back around
 		i++
 		if i >= len(p.producers) {
 			i = 0
+		}
+
+		// Attempt to publish
+		pd := p.producersIndex[i]
+		if err := pd.MultiPublish(p.topic, body); err == nil {
+			// success!
+			return nil
 		}
 	}
 
