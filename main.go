@@ -83,8 +83,8 @@ func listen(ch chan []byte) error {
 	log.Infof("Listening on %s for UDP trace frames", address.String())
 	for {
 		message := make([]byte, packetSize)
-		n, _, error := listener.ReadFrom(message)
-		if error != nil {
+		n, _, err := listener.ReadFrom(message)
+		if err != nil {
 			continue
 		}
 		buf := bytes.NewBuffer(message[0:n])
