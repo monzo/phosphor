@@ -15,7 +15,7 @@ It is comprised of a few simple components:
 
 ## Dependencies
 
- - NSQ is currently used as the delivery transport for traces between PhosphorD and the Phosphor Server
+ - [NSQ](https://nsq.io) is used as the delivery transport between PhosphorD and the Phosphor Server
 
 ## Caveats
 
