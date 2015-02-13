@@ -11,7 +11,7 @@ import (
 
 	log "github.com/cihub/seelog"
 
-	"github.com/bankpossible/iamdev/phosphord/forwarder"
+	"github.com/mattheath/phosphord/forwarder"
 )
 
 const (

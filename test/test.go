@@ -1,12 +1,13 @@
 package main
 
 import (
-	pb "github.com/bankpossible/iamdev/shared/messages"
-	"github.com/mattheath/goprotobuf/proto"
-
 	"fmt"
 	"net"
 	"time"
+
+	"github.com/mattheath/goprotobuf/proto"
+
+	pb "github.com/mattheath/phosphor/proto"
 )
 
 const (
@@ -17,16 +18,16 @@ func main() {
 
 	// Make example trace frame
 	t := &pb.TraceFrame{
-		TraceId:         proto.String("aasldjaskjdlsakjdkasjdklasjdlasjdkljdas"),
-		RequestId:       proto.String("8yf8sdg76sg897b98fbuys8b9s6rvs6ducghkfhi27tuw"),
-		ParentRequestId: proto.String("8yf8sdg76sg897b98fbuys8b9s6rvs6ducghkfhi27tuw"),
-		Type:            proto.String("CLIENT_IN"),
-		Timestamp:       proto.String(""),
-		Duration:        proto.Int64(1231312),
-		Hostname:        proto.String("nest"),
-		From:            proto.String("some.api"),
-		To:              proto.String("some.service"),
-		Payload:         proto.String(`{"boop":123}`),
+		TraceId:   proto.String("aasldjaskjdlsakjdkasjdklasjdlasjdkljdas"),
+		SpanId:    proto.String("8yf8sdg76sg897b98fbuys8b9s6rvs6ducghkfhi27tuw"),
+		ParentId:  proto.String("97as8d7s9a7a7dv32hrkqehfkuh23hq8d7h4g7iygs7ih"),
+		Type:      pb.FrameType_OUT,
+		Timestamp: proto.String(time.Now().UnixNano()),
+		Duration:  proto.Int64(1231312),
+		Hostname:  proto.String("somehostname"),
+		From:      proto.String("some.api"),
+		To:        proto.String("some.service"),
+		Payload:   proto.String(`{"boop":123}`),
 	}
 
 	// Marshal to bytes

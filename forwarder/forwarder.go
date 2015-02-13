@@ -7,7 +7,7 @@ import (
 	log "github.com/cihub/seelog"
 	"github.com/mattheath/goprotobuf/proto"
 
-	pb "github.com/bankpossible/iamdev/shared/messages"
+	pb "github.com/mattheath/phosphor/proto"
 )
 
 func Start(traceChan chan []byte, numWorkers, bufferSize int) {
