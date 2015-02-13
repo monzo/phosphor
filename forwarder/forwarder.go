@@ -19,11 +19,11 @@ func Start(traces chan []byte, tr transport.Transport, numWorkers, bufferSize in
 
 	for i := 0; i < numWorkers; i++ {
 		f := &forwarder{
-			id:            i,
-			ch:            traces,
-			tr:            tr,
-			messageBuffer: make([][]byte, 0, bufferSize),
-			bufferSize:    bufferSize,
+			id:          i,
+			ch:          traces,
+			tr:          tr,
+			traceBuffer: make([][]byte, 0, bufferSize),
+			bufferSize:  bufferSize,
 		}
 
 		// Do something useful
@@ -33,11 +33,11 @@ func Start(traces chan []byte, tr transport.Transport, numWorkers, bufferSize in
 }
 
 type forwarder struct {
-	id            int
-	ch            chan []byte
-	tr            transport.Transport
-	messageBuffer [][]byte
-	bufferSize    int
+	id          int
+	ch          chan []byte
+	tr          transport.Transport
+	traceBuffer [][]byte
+	bufferSize  int
 }
 
 func (f *forwarder) work() {
@@ -69,10 +69,10 @@ func (f *forwarder) work() {
 			}
 
 			// Add message to our buffer
-			f.messageBuffer = append(f.messageBuffer, b)
+			f.traceBuffer = append(f.traceBuffer, b)
 
 			// Forward on if we're at our buffer size
-			if len(f.messageBuffer) >= f.bufferSize {
+			if len(f.traceBuffer) >= f.bufferSize {
 				f.send()
 			}
 		case <-timeoutTick.C:
@@ -86,13 +86,13 @@ func (f *forwarder) work() {
 func (f *forwarder) send() error {
 
 	// Don't publish empty buffers
-	if len(f.messageBuffer) == 0 {
+	if len(f.traceBuffer) == 0 {
 		return nil
 	}
 
 	// Attempt to publish
-	log.Debugf("[Forwarder %v] Sending %v traces", f.id, len(f.messageBuffer))
-	if err := f.tr.MultiPublish(f.messageBuffer); err != nil {
+	log.Debugf("[Forwarder %v] Sending %v traces", f.id, len(f.traceBuffer))
+	if err := f.tr.MultiPublish(f.traceBuffer); err != nil {
 		// we return an error here, but currently ignore it
 		// therefore the behaviour will be reattempting to republish the
 		// buffer when the next trace arrives to this forwarder
@@ -100,7 +100,7 @@ func (f *forwarder) send() error {
 	}
 
 	// Empty the buffer on success
-	f.messageBuffer = nil
+	f.traceBuffer = nil
 
 	return nil
 }
