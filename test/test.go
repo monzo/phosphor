@@ -43,8 +43,7 @@ func main() {
 	// Send via UDP!
 
 	// Get a conn
-	c, err := net.DialTimeout("udp", "192.168.59.103:8130", time.Second)
-	// c, err := net.DialTimeout("udp", "localhost:8130", time.Second)
+	c, err := net.DialTimeout("udp", "localhost:7760", time.Second)
 	if err != nil {
 		panic(err)
 	}

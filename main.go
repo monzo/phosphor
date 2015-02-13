@@ -20,7 +20,7 @@ const (
 
 var (
 	packetSize  = 512
-	bindAddress = "0.0.0.0:8130"
+	bindAddress = "0.0.0.0:7760"
 
 	numForwarders = 20
 	bufferSize    = 200
