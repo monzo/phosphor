@@ -79,10 +79,20 @@ func (f *forwarder) work() {
 	}
 }
 
-func (f *forwarder) send() {
+func (f *forwarder) send() error {
 
 	log.Debugf("[Forwarder %v] Sent %v messages", f.id, len(f.messageBuffer))
 
-	// Empty the buffer
+	// Attempt to publish
+	if err := f.tr.MultiPublish(f.messageBuffer); err != nil {
+		// we return an error here, but currently ignore it
+		// therefore the behaviour will be reattempting to republish the
+		// buffer when the next trace arrives to this forwarder
+		return err
+	}
+
+	// Empty the buffer on success
 	f.messageBuffer = nil
+
+	return nil
 }
