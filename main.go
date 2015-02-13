@@ -43,7 +43,8 @@ var (
 
 func init() {
 	// Register flags
-	flag.BoolVar(&verbose, "v", false, "enable verbose logging")
+	flag.BoolVar(&verbose, "verbose", false, "enable verbose logging")
+
 	flag.IntVar(&numForwarders, "num-forwarders", 20, "set the number of workers which buffer and forward traces")
 	flag.IntVar(&bufferSize, "buffer-size", 200, "set the maximum number of traces buffered per worker before batch sending")
 
