@@ -11,13 +11,13 @@ import (
 
 type MemoryStore struct {
 	sync.RWMutex
-	store map[string]*domain.Trace
+	traces map[string]*domain.Trace
 }
 
 // NewMemoryStore initialises and returns a new MemoryStore
 func NewMemoryStore() *MemoryStore {
 	s := &MemoryStore{
-		store: make(map[string]*domain.Trace),
+		traces: make(map[string]*domain.Trace),
 	}
 
 	// run stats worker
@@ -35,7 +35,7 @@ func (s *MemoryStore) ReadTrace(id string) (*domain.Trace, error) {
 	s.RLock()
 	defer s.RUnlock()
 
-	return s.store[id], nil
+	return s.traces[id], nil
 }
 
 // StoreTraceFrame into the store, if the trace doesn't not already exist
@@ -55,7 +55,7 @@ func (s *MemoryStore) StoreFrame(f *domain.Frame) error {
 	}
 
 	// Load our current trace
-	t := s.store[f.TraceId]
+	t := s.traces[f.TraceId]
 
 	// Initialise a new trace if we don't have it already
 	if t == nil {
@@ -66,7 +66,7 @@ func (s *MemoryStore) StoreFrame(f *domain.Frame) error {
 	t.AppendFrame(f)
 
 	// Store it back
-	s.store[f.TraceId] = t
+	s.traces[f.TraceId] = t
 
 	return nil
 }
@@ -89,7 +89,7 @@ func (s *MemoryStore) printStats() {
 
 	// Get some data while under the mutex
 	s.RLock()
-	count := len(s.store)
+	count := len(s.traces)
 	s.RUnlock()
 
 	// Separate processing and logging outside of mutex
