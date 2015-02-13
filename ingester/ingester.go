@@ -32,7 +32,9 @@ func Run(nsqLookupdHTTPAddrs []string, st store.Store) {
 		os.Exit(1)
 	}
 
-	consumer.AddHandler(&IngestionHandler{})
+	consumer.AddHandler(&IngestionHandler{
+		store: st,
+	})
 
 	err = consumer.ConnectToNSQLookupds(nsqLookupdHTTPAddrs)
 	if err != nil {
@@ -46,7 +48,7 @@ func Run(nsqLookupdHTTPAddrs []string, st store.Store) {
 
 // IngestionHandler exists to match the NSQ handler interface
 type IngestionHandler struct {
-	s store.Store
+	store store.Store
 }
 
 // HandleMessage delivered by NSQ
@@ -64,7 +66,7 @@ func (ih *IngestionHandler) HandleMessage(message *nsq.Message) error {
 	log.Debugf("Received trace frame: %+v", f)
 
 	// Write to our store
-	ih.s.StoreFrame(f)
+	ih.store.StoreFrame(f)
 
 	return nil
 }
