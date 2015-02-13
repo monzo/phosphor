@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"flag"
 	"fmt"
 	"net"
 	"os"
@@ -27,19 +28,25 @@ var (
 
 	// logLevel default set to info and above
 	defaultLogLevel = "info"
+	verboseLogLevel = "debug"
+
+	// verbose logging mode
+	verbose = false
 )
 
+func init() {
+	flag.BoolVar(&verbose, "v", false, "enable verbose logging")
+}
+
 func main() {
+	flag.Parse()
 
 	// Set up the logger, using the log level set by the environment
 	initialiseLogger()
-
 	log.Infof("Phosphor started at %v using %v CPUs", time.Now(), runtime.NumCPU())
 
 	// Use ALL the CPUs so that Go's scheduler can do magic
 	runtime.GOMAXPROCS(runtime.NumCPU())
-
-	// @todo parse flags
 
 	// Make a channel to pass around trace frames
 	ch := make(chan []byte)
@@ -100,6 +107,11 @@ func initialiseLogger() {
 	logLevel := os.Getenv("LOG_LEVEL")
 	if logLevel == "" {
 		logLevel = defaultLogLevel
+	}
+
+	// Overridden by verbose flag
+	if verbose {
+		logLevel = verboseLogLevel
 	}
 
 	// Build config for seelog
