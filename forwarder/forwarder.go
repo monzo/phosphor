@@ -11,6 +11,8 @@ import (
 	"github.com/mattheath/phosphord/transport"
 )
 
+var Verbose bool
+
 func Start(traces chan []byte, tr transport.Transport, numWorkers, bufferSize int) {
 
 	log.Infof("Starting %v forwarders with buffer size of %v", numWorkers, bufferSize)

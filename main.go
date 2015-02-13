@@ -12,6 +12,7 @@ import (
 
 	log "github.com/cihub/seelog"
 
+	"github.com/mattheath/phosphor/util"
 	"github.com/mattheath/phosphord/forwarder"
 	"github.com/mattheath/phosphord/transport"
 )
@@ -24,6 +25,7 @@ var (
 	packetSize  = 512
 	bindAddress = "0.0.0.0:7760"
 
+	// forwarder defaults
 	numForwarders = 20
 	bufferSize    = 200
 
@@ -33,6 +35,10 @@ var (
 
 	// verbose logging mode
 	verbose = false
+
+	// NSQ settings
+	nsqdTCPAddrs = util.StringArray{}
+	nsqTopic     = "trace"
 )
 
 func init() {
@@ -40,6 +46,9 @@ func init() {
 	flag.BoolVar(&verbose, "v", false, "enable verbose logging")
 	flag.IntVar(&numForwarders, "num-forwarders", 20, "set the number of workers which buffer and forward traces")
 	flag.IntVar(&bufferSize, "buffer-size", 200, "set the maximum number of traces buffered per worker before batch sending")
+
+	flag.Var(&nsqdTCPAddrs, "nsqd-tcp-address", "nsqd TCP address (may be given multiple times)")
+	flag.StringVar(&nsqTopic, "nsq-topic", "trace", "nsq topic to forward traces to")
 }
 
 func main() {
@@ -58,14 +67,19 @@ func main() {
 	ch := make(chan []byte)
 
 	// Initialise our transport
-	tr := transport.NewNSQTransport()
+	tr, err := transport.NewNSQTransport(nsqTopic, nsqdTCPAddrs)
+	if err != nil {
+		log.Criticalf(err.Error())
+		os.Exit(1)
+	}
 
 	// Fire up a number of forwarders to process inbound messages
+	forwarder.Verbose = verbose
 	forwarder.Start(ch, tr, numForwarders, bufferSize)
 
 	// Bind and listen to UDP traffic
 	if err := listen(ch); err != nil {
-		log.Criticalf(err)
+		log.Criticalf(err.Error())
 		os.Exit(1)
 	}
 }
