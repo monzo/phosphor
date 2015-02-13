@@ -47,6 +47,8 @@ func main() {
 
 	// Set up the logger, using the log level set by the environment
 	initialiseLogger()
+	defer log.Flush()
+
 	log.Infof("Phosphor started at %v using %v CPUs", time.Now(), runtime.NumCPU())
 
 	// Use ALL the CPUs
