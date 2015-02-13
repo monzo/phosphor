@@ -57,14 +57,16 @@ func (f *forwarder) work() {
 		case b = <-f.ch:
 			i++
 
-			// Log the frame if we're in debug mode
-			decoded = &pb.TraceFrame{}
-			if err := proto.Unmarshal(b, decoded); err != nil {
-				log.Warnf("[Forwarder %v] Couldn't decode trace frame", f.id)
-				continue
+			// Log the frame if we're in verbose mode
+			if Verbose {
+				decoded = &pb.TraceFrame{}
+				if err := proto.Unmarshal(b, decoded); err != nil {
+					log.Warnf("[Forwarder %v] Couldn't decode trace frame", f.id)
+					continue
+				}
+				js, _ = json.Marshal(decoded)
+				log.Tracef("[Forwarder %v] Received message: %s", f.id, string(js))
 			}
-			js, _ = json.Marshal(decoded)
-			log.Tracef("[Forwarder %v] Received message: %s", f.id, string(js))
 
 			// Add message to our buffer
 			f.messageBuffer = append(f.messageBuffer, b)
@@ -76,7 +78,7 @@ func (f *forwarder) work() {
 		case <-timeoutTick.C:
 			f.send()
 		case <-metricsTick.C:
-			log.Tracef("[Forwarder %v] Processed %v messages", f.id, i)
+			log.Debugf("[Forwarder %v] Processed %v messages", f.id, i)
 		}
 	}
 }
