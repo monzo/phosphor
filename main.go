@@ -36,7 +36,10 @@ var (
 )
 
 func init() {
+	// Register flags
 	flag.BoolVar(&verbose, "v", false, "enable verbose logging")
+	flag.IntVar(&numForwarders, "num-forwarders", 20, "set the number of workers which buffer and forward traces")
+	flag.IntVar(&bufferSize, "buffer-size", 200, "set the maximum number of traces buffered per worker before batch sending")
 }
 
 func main() {
@@ -46,7 +49,7 @@ func main() {
 	initialiseLogger()
 	log.Infof("Phosphor started at %v using %v CPUs", time.Now(), runtime.NumCPU())
 
-	// Use ALL the CPUs so that Go's scheduler can do magic
+	// Use ALL the CPUs
 	runtime.GOMAXPROCS(runtime.NumCPU())
 
 	// Make a channel to pass around trace frames
@@ -62,7 +65,6 @@ func main() {
 	if err := listen(ch); err != nil {
 		os.Exit(1)
 	}
-
 }
 
 // listen on a UDP socket for trace frames
