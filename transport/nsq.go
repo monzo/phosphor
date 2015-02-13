@@ -10,7 +10,10 @@ import (
 	"github.com/mattheath/phosphor/util"
 )
 
-var ErrPublishFailure = errors.New("Failed to publish to NSQD")
+var (
+	ErrPublishFailure    = errors.New("Failed to publish to NSQD")
+	ErrNoConfiguredNodes = errors.New("No NSQD nodes are configured")
+)
 
 // NewNSQTransport initialises a Transport over NSQ
 func NewNSQTransport(topic string, nsqdTCPAddrs util.StringArray) (Transport, error) {
@@ -44,6 +47,10 @@ type NSQPublisher struct {
 }
 
 func (p *NSQPublisher) MultiPublish(body [][]byte) error {
+
+	if len(p.producers) == 0 {
+		return ErrNoConfiguredNodes
+	}
 
 	// Round robin, from a random starting position
 	i := rand.Intn(len(p.producers)) - 1
