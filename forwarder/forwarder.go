@@ -8,9 +8,10 @@ import (
 	"github.com/mattheath/goprotobuf/proto"
 
 	pb "github.com/mattheath/phosphor/proto"
+	"github.com/mattheath/phosphord/transport"
 )
 
-func Start(traceChan chan []byte, numWorkers, bufferSize int) {
+func Start(traceChan chan []byte, tr transport.Transport, numWorkers, bufferSize int) {
 
 	log.Infof("Starting %v forwarders with buffer size of %v", numWorkers, bufferSize)
 
@@ -18,6 +19,7 @@ func Start(traceChan chan []byte, numWorkers, bufferSize int) {
 		f := &forwarder{
 			id:            i,
 			ch:            traceChan,
+			tr:            tr,
 			messageBuffer: make([][]byte, 0, bufferSize),
 			bufferSize:    bufferSize,
 		}
@@ -31,6 +33,7 @@ func Start(traceChan chan []byte, numWorkers, bufferSize int) {
 type forwarder struct {
 	id            int
 	ch            chan []byte
+	tr            transport.Transport
 	messageBuffer [][]byte
 	bufferSize    int
 }

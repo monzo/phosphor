@@ -13,6 +13,7 @@ import (
 	log "github.com/cihub/seelog"
 
 	"github.com/mattheath/phosphord/forwarder"
+	"github.com/mattheath/phosphord/transport"
 )
 
 const (
@@ -51,8 +52,11 @@ func main() {
 	// Make a channel to pass around trace frames
 	ch := make(chan []byte)
 
+	// Initialise our transport
+	tr := transport.NewNSQTransport()
+
 	// Fire up a number of forwarders to process inbound messages
-	forwarder.Start(ch, numForwarders, bufferSize)
+	forwarder.Start(ch, tr, numForwarders, bufferSize)
 
 	// Bind and listen to UDP traffic
 	if err := listen(ch); err != nil {
