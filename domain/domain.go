@@ -9,7 +9,7 @@ import (
 // NewTrace initialises and returns a new Trace
 func NewTrace() *Trace {
 	return &Trace{
-		frames: make([]*Frame, 0),
+		Frames: make([]*Frame, 0),
 	}
 }
 
@@ -18,7 +18,7 @@ func NewTrace() *Trace {
 type Trace struct {
 	sync.Mutex
 
-	frames []*Frame
+	Frames []*Frame `json:"frames"`
 }
 
 // AppendFrame to a Trace
@@ -27,7 +27,7 @@ func (t *Trace) AppendFrame(f *Frame) error {
 		return errors.New("Slice is Nil")
 	}
 
-	t.frames = append(t.frames, f)
+	t.Frames = append(t.Frames, f)
 
 	return nil
 }
