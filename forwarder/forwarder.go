@@ -85,9 +85,13 @@ func (f *forwarder) work() {
 
 func (f *forwarder) send() error {
 
-	log.Debugf("[Forwarder %v] Sent %v messages", f.id, len(f.messageBuffer))
+	// Don't publish empty buffers
+	if len(f.messageBuffer) == 0 {
+		return nil
+	}
 
 	// Attempt to publish
+	log.Debugf("[Forwarder %v] Sending %v traces", f.id, len(f.messageBuffer))
 	if err := f.tr.MultiPublish(f.messageBuffer); err != nil {
 		// we return an error here, but currently ignore it
 		// therefore the behaviour will be reattempting to republish the
