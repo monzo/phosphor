@@ -17,10 +17,10 @@ message Annotation {
   // The type of annotation we're capturing
   AnnotationType type = 4;
 
-  // Time since the epoch in nanoseconds
+  // Time since the epoch in microseconds
   int64 timestamp = 5;
 
-  // Duration in nanoseconds
+  // Duration in microseconds
   // This should only be used to measure time on the same node
   // eg. the duration of service / rpc calls
   int64 duration = 6;

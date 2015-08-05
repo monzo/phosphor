@@ -65,9 +65,9 @@ type Annotation struct {
 	ParentId string `protobuf:"bytes,3,opt,name=parent_id" json:"parent_id,omitempty"`
 	// The type of annotation we're capturing
 	Type AnnotationType `protobuf:"varint,4,opt,name=type,enum=proto.AnnotationType" json:"type,omitempty"`
-	// Time since the epoch in nanoseconds
+	// Time since the epoch in microseconds
 	Timestamp int64 `protobuf:"varint,5,opt,name=timestamp" json:"timestamp,omitempty"`
-	// Duration in nanoseconds
+	// Duration in microseconds
 	// This should only be used to measure time on the same node
 	// eg. the duration of service / rpc calls
 	Duration int64 `protobuf:"varint,6,opt,name=duration" json:"duration,omitempty"`
