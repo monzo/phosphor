@@ -1,8 +1,7 @@
 package proto;
 
-message TraceFrame {
-
-  // The ID of the trace this frame is a component of
+message Annotation {
+  // The ID of the trace this annotation is a component of
   required string trace_id = 1;
 
   // The span this trace corresponds to, in the case this
@@ -13,14 +12,10 @@ message TraceFrame {
   // to correlate trace frames and reconstruct the request
   optional string parent_id = 3;
 
-  // The type of trace frame we're capturing
-  required FrameType type = 4;
+  // The type of annotation we're capturing
+  required AnnotationType type = 4;
 
   // Time since the epoch in nanoseconds
-  //
-  // 64bit time in nanoseconds with the default unix epoch gives us the following range:
-  // Min time: 1677-09-21 00:12:43.145224192 +0000 UTC
-  // Max time: 2262-04-11 23:47:16.854775807 +0000 UTC
   required int64 timestamp = 5;
 
   // Duration in nanoseconds
@@ -31,10 +26,10 @@ message TraceFrame {
   // Machine hostname, container name etc
   optional string hostname = 7;
 
-  // Origin of this frame, likely a service
+  // Origin of this annotation, likely a service or application for a RPC
   optional string origin = 8;
 
-  // Destination of this frame's action
+  // Destination of this annotations action
   // eg. the service which a request was destined for
   // likely not set for annotations
   optional string destination = 9;
@@ -46,7 +41,7 @@ message TraceFrame {
   repeated KeyValue key_value = 11;
 }
 
-enum FrameType {
+enum AnnotationType {
 	UNKNOWN = 0;
 	REQ = 1;
 	REP = 2;
