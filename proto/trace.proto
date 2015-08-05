@@ -1,44 +1,46 @@
+syntax="proto3";
+
 package proto;
 
 message Annotation {
   // The ID of the trace this annotation is a component of
-  required string trace_id = 1;
+  string trace_id = 1;
 
   // The span this trace corresponds to, in the case this
   // is representing a service (REQ/REP) call
-  optional string span_id = 2;
+  string span_id = 2;
 
   // The parent span this trace corresponds to, allowing us
   // to correlate trace frames and reconstruct the request
-  optional string parent_id = 3;
+  string parent_id = 3;
 
   // The type of annotation we're capturing
-  required AnnotationType type = 4;
+  AnnotationType type = 4;
 
   // Time since the epoch in nanoseconds
-  required int64 timestamp = 5;
+  int64 timestamp = 5;
 
   // Duration in nanoseconds
   // This should only be used to measure time on the same node
   // eg. the duration of service / rpc calls
-  optional int64 duration = 6;
+  int64 duration = 6;
 
   // Machine hostname, container name etc
-  optional string hostname = 7;
+  string hostname = 7;
 
   // Origin of this annotation, likely a service or application for a RPC
-  optional string origin = 8;
+  string origin = 8;
 
   // Destination of this annotations action
   // eg. the service which a request was destined for
   // likely not set for annotations
-  optional string destination = 9;
+  string destination = 9;
 
   // Payload as a string - eg. JSON encoded
-  optional string payload = 10;
+  string payload = 10;
 
   // Repeated series of key value fields for arbitrary data
-  repeated KeyValue key_value = 11;
+  KeyValue key_value = 11;
 }
 
 enum AnnotationType {
@@ -52,6 +54,6 @@ enum AnnotationType {
 }
 
 message KeyValue {
-	required string key = 1;
-	optional string value = 2;
+	string key = 1;
+	string value = 2;
 }
