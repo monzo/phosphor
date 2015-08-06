@@ -6,48 +6,52 @@ import (
 	traceproto "github.com/mattheath/phosphor/proto"
 )
 
-// FrameFromProto converts a proto frame to our domain
-func FrameFromProto(p *traceproto.TraceFrame) *Frame {
-	return &Frame{
-		TraceId:      p.GetTraceId(),
-		SpanId:       p.GetSpanId(),
-		ParentSpanId: p.GetParentId(),
-		Timestamp:    nanosecondInt64ToTime(p.GetTimestamp()),
-		Duration:     nanosecondInt64ToDuration(p.GetDuration()),
-		Hostname:     p.GetHostname(),
-		Origin:       p.GetOrigin(),
-		Destination:  p.GetDestination(),
-		FrameType:    protoToFrameType(p.GetType()),
-		Payload:      p.GetPayload(),
-		PayloadSize:  int32(len(p.GetPayload())),
-		KeyValue:     protoToKeyValue(p.GetKeyValue()),
+// AnnotationFromProto converts a proto frame to our domain
+func AnnotationFromProto(p *traceproto.Annotation) *Annotation {
+	if p == nil {
+		return &Annotation{}
+	}
+
+	return &Annotation{
+		TraceId:        p.TraceId,
+		SpanId:         p.SpanId,
+		ParentSpanId:   p.ParentId,
+		Timestamp:      microsecondInt64ToTime(p.Timestamp),
+		Duration:       microsecondInt64ToDuration(p.Duration),
+		Hostname:       p.Hostname,
+		Origin:         p.Origin,
+		Destination:    p.Destination,
+		AnnotationType: protoToAnnotationType(p.Type),
+		Payload:        p.Payload,
+		PayloadSize:    int32(len(p.Payload)),
+		KeyValue:       protoToKeyValue(p.KeyValue),
 	}
 }
 
-// protoToFrameType converts a frametype in our proto to our domain
-func protoToFrameType(p traceproto.FrameType) FrameType {
+// protoToAnnotationType converts a annotation type in our proto to our domain
+func protoToAnnotationType(p traceproto.AnnotationType) AnnotationType {
 	// Ensure we are within bounds
-	ft := int32(p)
-	if ft > 6 || ft < 1 {
-		ft = 0
+	at := int32(p)
+	if at > 6 || at < 1 {
+		at = 0
 	}
 
-	return FrameType(ft)
+	return AnnotationType(at)
 }
 
-// nanosecondInt64ToTime converts an integer number of nanoseconds
+// microsecondInt64ToTime converts an integer number of microseconds
 // since the epoch to a time
-func nanosecondInt64ToTime(i int64) time.Time {
-	nsec := i % 1e9
-	sec := (i - nsec) / 1e9
+func microsecondInt64ToTime(i int64) time.Time {
+	µsec := i % 1e6
+	sec := (i - µsec) / 1e6
 
-	return time.Unix(sec, nsec)
+	return time.Unix(sec, µsec*1e3)
 }
 
-// nanosecondInt64ToDuration converts an integer number
-// of nanoseconds to a duration
-func nanosecondInt64ToDuration(i int64) time.Duration {
-	return time.Duration(i) * time.Nanosecond
+// microsecondInt64ToDuration converts an integer number
+// of microseconds to a duration
+func microsecondInt64ToDuration(i int64) time.Duration {
+	return time.Duration(i) * time.Microsecond
 }
 
 // protoToKeyValue converts a repeated set of proto key values
@@ -55,7 +59,10 @@ func nanosecondInt64ToDuration(i int64) time.Duration {
 func protoToKeyValue(p []*traceproto.KeyValue) map[string]string {
 	ret := make(map[string]string)
 	for _, kv := range p {
-		ret[kv.GetKey()] = kv.GetValue()
+		if p == nil {
+			continue
+		}
+		ret[kv.Key] = kv.Value
 	}
 	return ret
 }

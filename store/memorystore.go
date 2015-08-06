@@ -26,7 +26,7 @@ func NewMemoryStore() *MemoryStore {
 	return s
 }
 
-// ReadTrace retrieves a full Trace, composed of Frames from the store by ID
+// ReadTrace retrieves a full Trace, composed of Annotations from the store by ID
 func (s *MemoryStore) ReadTrace(id string) (*domain.Trace, error) {
 	if s == nil {
 		return nil, ErrStoreNotInitialised
@@ -38,35 +38,35 @@ func (s *MemoryStore) ReadTrace(id string) (*domain.Trace, error) {
 	return s.traces[id], nil
 }
 
-// StoreTraceFrame into the store, if the trace doesn't not already exist
+// StoreAnnotation into the store, if the trace doesn't not already exist
 // this will be created for the global trace ID
-func (s *MemoryStore) StoreFrame(f *domain.Frame) error {
+func (s *MemoryStore) StoreAnnotation(a *domain.Annotation) error {
 	s.Lock()
 	defer s.Unlock()
 
 	if s == nil {
 		return ErrStoreNotInitialised
 	}
-	if f == nil {
-		return ErrInvalidFrame
+	if a == nil {
+		return ErrInvalidAnnotation
 	}
-	if f.TraceId == "" {
+	if a.TraceId == "" {
 		return ErrInvalidTraceId
 	}
 
 	// Load our current trace
-	t := s.traces[f.TraceId]
+	t := s.traces[a.TraceId]
 
 	// Initialise a new trace if we don't have it already
 	if t == nil {
 		t = domain.NewTrace()
 	}
 
-	// Add the new frame to this
-	t.AppendFrame(f)
+	// Add the new annotation to this
+	t.AppendAnnotation(a)
 
 	// Store it back
-	s.traces[f.TraceId] = t
+	s.traces[a.TraceId] = t
 
 	return nil
 }

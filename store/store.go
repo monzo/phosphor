@@ -8,12 +8,12 @@ import (
 
 type Store interface {
 	ReadTrace(id string) (*domain.Trace, error)
-	StoreFrame(f *domain.Frame) error
+	StoreAnnotation(a *domain.Annotation) error
 }
 
 var (
 	ErrStoreNotInitialised = errors.New("Store is not initialised")
-	ErrInvalidFrame        = errors.New("Frame is invalid")
+	ErrInvalidAnnotation   = errors.New("Annotation is invalid")
 	ErrInvalidTrace        = errors.New("Trace is invalid")
 	ErrInvalidTraceId      = errors.New("TraceId is invalid")
 )

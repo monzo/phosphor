@@ -9,51 +9,52 @@ import (
 // NewTrace initialises and returns a new Trace
 func NewTrace() *Trace {
 	return &Trace{
-		Frames: make([]*Frame, 0),
+		Annotation: make([]*Annotation, 0),
 	}
 }
 
 // Trace represents a full trace of a request
-// comprised of a number of frames
+// comprised of a number of Annotations
 type Trace struct {
 	sync.Mutex
 
-	Frames []*Frame `json:"frames"`
+	Annotation []*Annotation `json:"annotations"`
 }
 
-// AppendFrame to a Trace
-func (t *Trace) AppendFrame(f *Frame) error {
+// AppendAnnotation to a Trace
+func (t *Trace) AppendAnnotation(a *Annotation) error {
 	if t == nil {
-		return errors.New("Slice is Nil")
+		return errors.New("Trace is Nil")
 	}
 
-	t.Frames = append(t.Frames, f)
+	t.Annotation = append(t.Annotation, a)
 
 	return nil
 }
 
-// FrameType represents an Enum of types of Frames which Phosphor can record
-type FrameType int32
+// AnnotationType represents an Enum of types of Anotations which Phosphor supports
+type AnnotationType int32
 
 const (
-	UnknownFrameType = FrameType(0) // No idea...
+	UnknownAnnotationType = AnnotationType(0) // No idea...
 
 	// Calls
-	Req     = FrameType(1) // Client Request dispatch
-	Rsp     = FrameType(2) // Client Response received
-	In      = FrameType(3) // Server Request received
-	Out     = FrameType(4) // Server Response dispatched
-	Timeout = FrameType(5) // Client timed out waiting
+	Req     = AnnotationType(1) // Client Request dispatch
+	Rsp     = AnnotationType(2) // Client Response received
+	In      = AnnotationType(3) // Server Request received
+	Out     = AnnotationType(4) // Server Response dispatched
+	Timeout = AnnotationType(5) // Client timed out waiting
 
 	// Developer initiated annotations
-	Annotation = FrameType(6)
+	// @todo
+	// Annotation = AnnotationType(6)
 )
 
-// A Frame represents the smallest individually fired component of a trace
+// An Annotation represents the smallest individually recorded component of a trace
 // These can be assembled into spans, and entire traces of a request to our systems
-type Frame struct {
+type Annotation struct {
 	TraceId      string // Global Trace Identifier
-	SpanId       string // Identifier for this span, non unique - eg. RPC calls would have 4 frames with this id
+	SpanId       string // Identifier for this span, non unique - eg. RPC calls would have 4 annotation with this id
 	ParentSpanId string // Parent span - eg. nested RPC calls
 
 	Timestamp time.Time     // Timestamp the event occured, can only be compared on the same machine
@@ -63,7 +64,7 @@ type Frame struct {
 	Origin      string // Fully qualified name of the message origin
 	Destination string // Optional: Fully qualified name of the message destination
 
-	FrameType FrameType // The type of Frame
+	AnnotationType AnnotationType // The type of Annotation
 
 	Payload     string            // The payload, eg. RPC body, or Annotation
 	PayloadSize int32             // Bytes of payload

@@ -56,7 +56,7 @@ type IngestionHandler struct {
 // HandleMessage delivered by NSQ
 func (ih *IngestionHandler) HandleMessage(message *nsq.Message) error {
 
-	p := &traceproto.TraceFrame{}
+	p := &traceproto.Annotation{}
 	err := proto.Unmarshal(message.Body, p)
 	if err != nil {
 		// returning an error to NSQ will requeue this
@@ -64,11 +64,11 @@ func (ih *IngestionHandler) HandleMessage(message *nsq.Message) error {
 		return nil
 	}
 
-	f := domain.FrameFromProto(p)
-	log.Debugf("Received trace frame: %+v", f)
+	a := domain.AnnotationFromProto(p)
+	log.Debugf("Received annotation: %+v", a)
 
 	// Write to our store
-	ih.store.StoreFrame(f)
+	ih.store.StoreAnnotation(a)
 
 	return nil
 }
