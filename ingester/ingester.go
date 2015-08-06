@@ -18,8 +18,10 @@ var (
 	channel = "phosphor-server"
 
 	maxInFlight = 200
+	concurrency = 10
 )
 
+// Run the trace ingester, ingesting traces into the provided store
 func Run(nsqLookupdHTTPAddrs []string, st store.Store) {
 
 	cfg := nsq.NewConfig()
@@ -32,9 +34,9 @@ func Run(nsqLookupdHTTPAddrs []string, st store.Store) {
 		os.Exit(1)
 	}
 
-	consumer.AddHandler(&IngestionHandler{
+	consumer.AddConcurrentHandlers(&IngestionHandler{
 		store: st,
-	})
+	}, 10)
 
 	err = consumer.ConnectToNSQLookupds(nsqLookupdHTTPAddrs)
 	if err != nil {
