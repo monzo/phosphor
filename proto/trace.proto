@@ -45,11 +45,14 @@ message Annotation {
 
 enum AnnotationType {
 	UNKNOWN = 0;
-	REQ = 1;
-	REP = 2;
-	IN = 3;
-	OUT = 4;
+
+	CLIENT_SEND = 1;
+	CLIENT_RECV = 2;
+	SERVER_SEND = 3;
+	SERVER_RECV = 4;
+
 	TIMEOUT = 5;
+
 	ANNOTATION = 6;
 }
 
