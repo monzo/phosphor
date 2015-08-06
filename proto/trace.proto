@@ -40,7 +40,7 @@ message Annotation {
   string payload = 10;
 
   // Repeated series of key value fields for arbitrary data
-  KeyValue key_value = 11;
+  repeated KeyValue key_value = 11;
 }
 
 enum AnnotationType {

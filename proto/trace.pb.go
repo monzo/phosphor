@@ -82,14 +82,14 @@ type Annotation struct {
 	// Payload as a string - eg. JSON encoded
 	Payload string `protobuf:"bytes,10,opt,name=payload" json:"payload,omitempty"`
 	// Repeated series of key value fields for arbitrary data
-	KeyValue *KeyValue `protobuf:"bytes,11,opt,name=key_value" json:"key_value,omitempty"`
+	KeyValue []*KeyValue `protobuf:"bytes,11,rep,name=key_value" json:"key_value,omitempty"`
 }
 
 func (m *Annotation) Reset()         { *m = Annotation{} }
 func (m *Annotation) String() string { return proto1.CompactTextString(m) }
 func (*Annotation) ProtoMessage()    {}
 
-func (m *Annotation) GetKeyValue() *KeyValue {
+func (m *Annotation) GetKeyValue() []*KeyValue {
 	if m != nil {
 		return m.KeyValue
 	}
