@@ -7,8 +7,8 @@ Phosphor is a Distributed Tracing system, similar to [Google's Dapper](https://r
 It is comprised of a few simple components:
 
  - Phosphor Client, used to send traces from applications
- - [Phosphor Daemon](https://github.com/mattheath/phosphord), collects traces and forwards onto the main server
- - [Phosphor Server](https://github.com/mattheath/phosphor), stores traces and aggregated trace information
+ - [Phosphor Daemon](https://github.com/mondough/phosphord), collects traces and forwards onto the main server
+ - [Phosphor Server](https://github.com/mondough/phosphor), stores traces and aggregated trace information
  - Phosphor UI, view trace and debug information about your infrastructure
 
 ![Phosphor Architecture](docs/phosphor/outline.png)
@@ -20,7 +20,3 @@ It is comprised of a few simple components:
 ## Caveats
 
 This system is currently in development, and some components are not yet open source. In particular, the persistence layer in this repository is an in-memory mock, and is therefore not appropriate for production usage. Additional storage adaptors will be added in the near future.
-
-## Thanks
-
-Phosphor was developed by Matt Heath ([@mattheath](https://github.com/mattheath)) with the support of [Starling](https://starlingbank.co.uk), based on similar systems built internally at [Hailo](https://hailoapp.com).
