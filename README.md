@@ -1,6 +1,10 @@
 # PhosphorD
 
-PhosphorD is a local forwarder, which receives traces from the Phosphor client, and forwards to the [Phosphor server](https://github.com/mattheath/phosphor).
+PhosphorD is a local forwarder, like StatsD, which receives traces from the Phosphor client, and forwards to the [Phosphor server](https://github.com/mattheath/phosphor).
+
+Currently this receives Traces over UDP, which prevents clients blocking, but is reasonably reliable on a local machine. In the event this blocks, traces will be dropped and lost.
+
+A future improvement would make this configurable to read from local files, mirroring the behaviour of Dapper Daemons as described in the [Google Dapper](https://research.google.com/pubs/pub36356.html) paper.
 
 ## Usage
 
