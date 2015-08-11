@@ -8,9 +8,9 @@ import (
 	log "github.com/cihub/seelog"
 	"github.com/golang/protobuf/proto"
 
-	"github.com/mattheath/phosphor/domain"
-	traceproto "github.com/mattheath/phosphor/proto"
-	"github.com/mattheath/phosphor/store"
+	"github.com/mondough/phosphor/domain"
+	traceproto "github.com/mondough/phosphor/proto"
+	"github.com/mondough/phosphor/store"
 )
 
 var (

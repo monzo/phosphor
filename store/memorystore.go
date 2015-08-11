@@ -6,7 +6,7 @@ import (
 
 	log "github.com/cihub/seelog"
 
-	"github.com/mattheath/phosphor/domain"
+	"github.com/mondough/phosphor/domain"
 )
 
 type MemoryStore struct {

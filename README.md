@@ -2,7 +2,7 @@
 
 Phosphor is a Distributed Tracing system, similar to [Google's Dapper](https://research.google.com/pubs/pub36356.html),  [Twitter's Zipkin](https://twitter.github.io/zipkin), and [Hailo's Trace Service](https://speakerdeck.com/mattheath/scaling-microservices-in-go-high-load-strategy-2015?slide=45).
 
-![](https://travis-ci.org/mattheath/phosphor.svg?branch=master)
+![](https://travis-ci.org/mondough/phosphor.svg?branch=master)
 
 It is comprised of a few simple components:
 

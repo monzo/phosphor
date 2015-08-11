@@ -7,10 +7,10 @@ import (
 
 	log "github.com/cihub/seelog"
 
-	"github.com/mattheath/phosphor/handler"
-	"github.com/mattheath/phosphor/ingester"
-	"github.com/mattheath/phosphor/store"
-	"github.com/mattheath/phosphor/util"
+	"github.com/mondough/phosphor/handler"
+	"github.com/mondough/phosphor/ingester"
+	"github.com/mondough/phosphor/store"
+	"github.com/mondough/phosphor/util"
 )
 
 var HTTPPort = 7750

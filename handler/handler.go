@@ -8,8 +8,8 @@ import (
 
 	log "github.com/cihub/seelog"
 
-	"github.com/mattheath/phosphor/store"
-	"github.com/mattheath/phosphor/util"
+	"github.com/mondough/phosphor/store"
+	"github.com/mondough/phosphor/util"
 )
 
 // DefaultStore is a reference to our persistence layer which we can query

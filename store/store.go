@@ -3,7 +3,7 @@ package store
 import (
 	"errors"
 
-	"github.com/mattheath/phosphor/domain"
+	"github.com/mondough/phosphor/domain"
 )
 
 type Store interface {

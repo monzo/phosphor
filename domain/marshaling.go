@@ -3,7 +3,7 @@ package domain
 import (
 	"time"
 
-	traceproto "github.com/mattheath/phosphor/proto"
+	traceproto "github.com/mondough/phosphor/proto"
 )
 
 // AnnotationFromProto converts a proto frame to our domain

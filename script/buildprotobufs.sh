@@ -6,7 +6,7 @@ MESSAGEPATH=${ROOT}/proto
 
 # SRCPATH is the path to our src directory - everything from here is fully qualified
 # This depends on your storing your code in your GOPATH
-# eg. xxx/github.com/mattheath/phosphor
+# eg. xxx/github.com/mondough/phosphor
 SRCPATH=$(cd ${ROOT}/../../.. && pwd)
 
 # Cakes are important. and delicious. and should be given out for success.
