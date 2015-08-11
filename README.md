@@ -1,6 +1,6 @@
 # PhosphorD
 
-PhosphorD is a local forwarder, like StatsD, which receives traces from the Phosphor client, and forwards to the [Phosphor server](https://github.com/mattheath/phosphor).
+PhosphorD is a local forwarder, like StatsD, which receives traces from the Phosphor client, and forwards to the [Phosphor server](https://github.com/mondough/phosphor).
 
 Currently this receives Traces over UDP, which prevents clients blocking, but is reasonably reliable on a local machine. In the event this blocks, traces will be dropped and lost.
 
@@ -8,7 +8,7 @@ A future improvement would make this configurable to read from local files, mirr
 
 ## Usage
 
-`go get github.com/mattheath/phosphord`
+`go get github.com/mondough/phosphord`
 
 ### Command line options
 

@@ -7,7 +7,7 @@ import (
 
 	"github.com/mattheath/goprotobuf/proto"
 
-	pb "github.com/mattheath/phosphor/proto"
+	pb "github.com/mondough/phosphor/proto"
 )
 
 const (

@@ -7,8 +7,8 @@ import (
 	log "github.com/cihub/seelog"
 	"github.com/mattheath/goprotobuf/proto"
 
-	pb "github.com/mattheath/phosphor/proto"
-	"github.com/mattheath/phosphord/transport"
+	pb "github.com/mondough/phosphor/proto"
+	"github.com/mondough/phosphord/transport"
 )
 
 var Verbose bool

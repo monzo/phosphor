@@ -12,9 +12,9 @@ import (
 
 	log "github.com/cihub/seelog"
 
-	"github.com/mattheath/phosphor/util"
-	"github.com/mattheath/phosphord/forwarder"
-	"github.com/mattheath/phosphord/transport"
+	"github.com/mondough/phosphor/util"
+	"github.com/mondough/phosphord/forwarder"
+	"github.com/mondough/phosphord/transport"
 )
 
 const (
