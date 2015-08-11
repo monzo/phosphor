@@ -46,7 +46,7 @@ func (f *forwarder) work() {
 
 	var b []byte
 	var i int
-	var decoded *pb.TraceFrame
+	var decoded *pb.Annotation
 	var js []byte
 
 	metricsTick := time.NewTicker(5 * time.Second)
@@ -59,7 +59,7 @@ func (f *forwarder) work() {
 
 			// Log the frame if we're in verbose mode
 			if Verbose {
-				decoded = &pb.TraceFrame{}
+				decoded = &pb.Annotation{}
 				if err := proto.Unmarshal(b, decoded); err != nil {
 					log.Warnf("[Forwarder %v] Couldn't decode trace frame", f.id)
 					continue
