@@ -6,8 +6,8 @@ import (
 	traceproto "github.com/mondough/phosphor/proto"
 )
 
-// AnnotationFromProto converts a proto frame to our domain
-func AnnotationFromProto(p *traceproto.Annotation) *Annotation {
+// ProtoToAnnotation converts a proto annotation to our domain
+func ProtoToAnnotation(p *traceproto.Annotation) *Annotation {
 	if p == nil {
 		return &Annotation{}
 	}
@@ -39,6 +39,17 @@ func protoToAnnotationType(p traceproto.AnnotationType) AnnotationType {
 	return AnnotationType(at)
 }
 
+// annotationTypeToProto converts a annotation type in our domain to proto format
+func annotationTypeToProto(at AnnotationType) traceproto.AnnotationType {
+	// Ensure we are within bounds
+	p := int32(at)
+	if p > 6 || p < 1 {
+		p = 0
+	}
+
+	return traceproto.AnnotationType(p)
+}
+
 // microsecondInt64ToTime converts an integer number of microseconds
 // since the epoch to a time
 func microsecondInt64ToTime(i int64) time.Time {
@@ -48,10 +59,23 @@ func microsecondInt64ToTime(i int64) time.Time {
 	return time.Unix(sec, µsec*1e3)
 }
 
+// timeToMicrosecondInt64 converts a time to µseconds since epoch as int64
+func timeToMicrosecondInt64(t time.Time) int64 {
+	sec := t.Unix() * 1e6
+	µsec := int64(t.Nanosecond() / 1e3)
+
+	return sec + µsec
+}
+
 // microsecondInt64ToDuration converts an integer number
 // of microseconds to a duration
 func microsecondInt64ToDuration(i int64) time.Duration {
 	return time.Duration(i) * time.Microsecond
+}
+
+// durationToMicrosecondInt64 returns a duration to the nearest µs
+func durationToMicrosecondInt64(d time.Duration) int64 {
+	return d.Nanoseconds() / 1e3
 }
 
 // protoToKeyValue converts a repeated set of proto key values
@@ -65,4 +89,41 @@ func protoToKeyValue(p []*traceproto.KeyValue) map[string]string {
 		ret[kv.Key] = kv.Value
 	}
 	return ret
+}
+
+// keyValueToProto converts a map of keys => values to a  repeated set
+// of proto key values
+func keyValueToProto(m map[string]string) []*traceproto.KeyValue {
+	ret := make([]*traceproto.KeyValue, 0, len(m))
+	for k, v := range m {
+		kv := &traceproto.KeyValue{
+			Key:   k,
+			Value: v,
+		}
+		ret = append(ret, kv)
+	}
+	return ret
+}
+
+// AnnotationToProto converts a domain annotation to our proto format
+func AnnotationToProto(a *Annotation) *traceproto.Annotation {
+	if a == nil {
+		return &traceproto.Annotation{}
+	}
+
+	return &traceproto.Annotation{
+		TraceId:  a.TraceId,
+		SpanId:   a.SpanId,
+		ParentId: a.ParentSpanId,
+		Type:     annotationTypeToProto(a.AnnotationType),
+
+		Timestamp: timeToMicrosecondInt64(a.Timestamp),
+		Duration:  durationToMicrosecondInt64(a.Duration),
+
+		Hostname:    a.Hostname,
+		Origin:      a.Origin,
+		Destination: a.Destination,
+		Payload:     a.Payload,
+		KeyValue:    keyValueToProto(a.KeyValue),
+	}
 }

@@ -64,7 +64,7 @@ func (ih *IngestionHandler) HandleMessage(message *nsq.Message) error {
 		return nil
 	}
 
-	a := domain.AnnotationFromProto(p)
+	a := domain.ProtoToAnnotation(p)
 	log.Debugf("Received annotation: %+v", a)
 
 	// Write to our store
