@@ -52,7 +52,7 @@ func TraceLookup(w http.ResponseWriter, r *http.Request) {
 	response(
 		w,
 		map[string]interface{}{
-			"trace": t,
+			"trace": prettyFormatTrace(t),
 		},
 	)
 }
