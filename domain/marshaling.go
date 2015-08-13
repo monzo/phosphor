@@ -105,6 +105,15 @@ func keyValueToProto(m map[string]string) []*traceproto.KeyValue {
 	return ret
 }
 
+// AnnotationsToProto converts a slice of domain annotations to our proto format
+func AnnotationsToProto(a []*Annotation) []*traceproto.Annotation {
+	ret := make([]*traceproto.Annotation, 0, len(a))
+	for _, v := range a {
+		ret = append(ret, AnnotationToProto(v))
+	}
+	return ret
+}
+
 // AnnotationToProto converts a domain annotation to our proto format
 func AnnotationToProto(a *Annotation) *traceproto.Annotation {
 	if a == nil {
