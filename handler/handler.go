@@ -29,7 +29,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 func TraceLookup(w http.ResponseWriter, r *http.Request) {
 	traceId := r.URL.Query().Get("traceId")
 	if traceId == "" {
-		errorResponse(w, http.StatusBadRequest, errors.New("traceId param not provided"))
+		errorResponse(r, w, http.StatusBadRequest, errors.New("traceId param not provided"))
 		return
 	}
 
@@ -37,19 +37,20 @@ func TraceLookup(w http.ResponseWriter, r *http.Request) {
 	t, err := DefaultStore.ReadTrace(traceId)
 	if err != nil {
 		log.Errorf("Trace lookup failed: %s", err)
-		errorResponse(w, http.StatusInternalServerError, fmt.Errorf("could not load trace: %s", err))
+		errorResponse(r, w, http.StatusInternalServerError, fmt.Errorf("could not load trace: %s", err))
 		return
 	}
 
 	// If we don't find the trace return 404
 	if t == nil {
 		log.Debugf("Trace not found: %s", traceId)
-		errorResponse(w, http.StatusNotFound, errors.New("traceId not found"))
+		errorResponse(r, w, http.StatusNotFound, errors.New("traceId not found"))
 		return
 	}
 
 	// Return trace
 	response(
+		r,
 		w,
 		map[string]interface{}{
 			"trace": prettyFormatTrace(t),
@@ -58,21 +59,33 @@ func TraceLookup(w http.ResponseWriter, r *http.Request) {
 }
 
 // response sends the response back to the client, marshaling to JSON
-func response(w http.ResponseWriter, resp interface{}) {
-	writeResponse(w, http.StatusOK, resp)
+func response(r *http.Request, w http.ResponseWriter, resp interface{}) {
+	writeResponse(r, w, http.StatusOK, resp)
 }
 
 // errorResponse marshals an error to JSON and returns this to the client
-func errorResponse(w http.ResponseWriter, code int, err error) {
+func errorResponse(r *http.Request, w http.ResponseWriter, code int, err error) {
 	resp := map[string]interface{}{
 		"error": err.Error(),
 	}
 
-	writeResponse(w, code, resp)
+	writeResponse(r, w, code, resp)
 }
 
 // response marshals a response to json and returns to the client
-func writeResponse(w http.ResponseWriter, code int, resp interface{}) {
+func writeResponse(r *http.Request, w http.ResponseWriter, code int, resp interface{}) {
+
+	// Deal with CORS
+	if origin := r.Header.Get("Origin"); origin != "" {
+		w.Header().Set("Access-Control-Allow-Origin", origin)
+		w.Header().Set("Access-Control-Allow-Methods", "DELETE, GET, HEAD, OPTIONS, POST, PUT")
+		w.Header().Set("Access-Control-Allow-Credentials", "true")
+		// Allow any headers
+		if wantedHeaders := r.Header.Get("Access-Control-Request-Headers"); wantedHeaders != "" {
+			w.Header().Set("Access-Control-Allow-Headers", wantedHeaders)
+		}
+	}
+
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 
 	b, err := json.Marshal(resp)
