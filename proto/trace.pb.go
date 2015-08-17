@@ -25,8 +25,8 @@ const (
 	AnnotationType_UNKNOWN     AnnotationType = 0
 	AnnotationType_CLIENT_SEND AnnotationType = 1
 	AnnotationType_CLIENT_RECV AnnotationType = 2
-	AnnotationType_SERVER_SEND AnnotationType = 3
-	AnnotationType_SERVER_RECV AnnotationType = 4
+	AnnotationType_SERVER_RECV AnnotationType = 3
+	AnnotationType_SERVER_SEND AnnotationType = 4
 	AnnotationType_TIMEOUT     AnnotationType = 5
 	AnnotationType_ANNOTATION  AnnotationType = 6
 )
@@ -35,8 +35,8 @@ var AnnotationType_name = map[int32]string{
 	0: "UNKNOWN",
 	1: "CLIENT_SEND",
 	2: "CLIENT_RECV",
-	3: "SERVER_SEND",
-	4: "SERVER_RECV",
+	3: "SERVER_RECV",
+	4: "SERVER_SEND",
 	5: "TIMEOUT",
 	6: "ANNOTATION",
 }
@@ -44,8 +44,8 @@ var AnnotationType_value = map[string]int32{
 	"UNKNOWN":     0,
 	"CLIENT_SEND": 1,
 	"CLIENT_RECV": 2,
-	"SERVER_SEND": 3,
-	"SERVER_RECV": 4,
+	"SERVER_RECV": 3,
+	"SERVER_SEND": 4,
 	"TIMEOUT":     5,
 	"ANNOTATION":  6,
 }

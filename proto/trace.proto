@@ -52,8 +52,8 @@ enum AnnotationType {
 
 	CLIENT_SEND = 1;
 	CLIENT_RECV = 2;
-	SERVER_SEND = 3;
-	SERVER_RECV = 4;
+	SERVER_RECV = 3;
+	SERVER_SEND = 4;
 
 	TIMEOUT = 5;
 
