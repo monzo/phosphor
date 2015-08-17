@@ -65,24 +65,27 @@ type Annotation struct {
 	ParentId string `protobuf:"bytes,3,opt,name=parent_id" json:"parent_id,omitempty"`
 	// The type of annotation we're capturing
 	Type AnnotationType `protobuf:"varint,4,opt,name=type,enum=proto.AnnotationType" json:"type,omitempty"`
+	// Flag to indicate this is an asynchronous span, which will not have a
+	// response - eg. just client send and server recv annotations
+	Async bool `protobuf:"varint,5,opt,name=async" json:"async,omitempty"`
 	// Time since the epoch in microseconds
-	Timestamp int64 `protobuf:"varint,5,opt,name=timestamp" json:"timestamp,omitempty"`
+	Timestamp int64 `protobuf:"varint,6,opt,name=timestamp" json:"timestamp,omitempty"`
 	// Duration in microseconds
 	// This should only be used to measure time on the same node
 	// eg. the duration of service / rpc calls
-	Duration int64 `protobuf:"varint,6,opt,name=duration" json:"duration,omitempty"`
+	Duration int64 `protobuf:"varint,7,opt,name=duration" json:"duration,omitempty"`
 	// Machine hostname, container name etc
-	Hostname string `protobuf:"bytes,7,opt,name=hostname" json:"hostname,omitempty"`
+	Hostname string `protobuf:"bytes,8,opt,name=hostname" json:"hostname,omitempty"`
 	// Origin of this annotation, likely a service or application for a RPC
-	Origin string `protobuf:"bytes,8,opt,name=origin" json:"origin,omitempty"`
+	Origin string `protobuf:"bytes,9,opt,name=origin" json:"origin,omitempty"`
 	// Destination of this annotations action
 	// eg. the service which a request was destined for
 	// likely not set for annotations
-	Destination string `protobuf:"bytes,9,opt,name=destination" json:"destination,omitempty"`
+	Destination string `protobuf:"bytes,10,opt,name=destination" json:"destination,omitempty"`
 	// Payload as a string - eg. JSON encoded
-	Payload string `protobuf:"bytes,10,opt,name=payload" json:"payload,omitempty"`
+	Payload string `protobuf:"bytes,11,opt,name=payload" json:"payload,omitempty"`
 	// Repeated series of key value fields for arbitrary data
-	KeyValue []*KeyValue `protobuf:"bytes,11,rep,name=key_value" json:"key_value,omitempty"`
+	KeyValue []*KeyValue `protobuf:"bytes,12,rep,name=key_value" json:"key_value,omitempty"`
 }
 
 func (m *Annotation) Reset()         { *m = Annotation{} }

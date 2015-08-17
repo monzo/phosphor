@@ -17,30 +17,34 @@ message Annotation {
   // The type of annotation we're capturing
   AnnotationType type = 4;
 
+  // Flag to indicate this is an asynchronous span, which will not have a
+  // response - eg. just client send and server recv annotations
+  bool async = 5;
+
   // Time since the epoch in microseconds
-  int64 timestamp = 5;
+  int64 timestamp = 6;
 
   // Duration in microseconds
   // This should only be used to measure time on the same node
   // eg. the duration of service / rpc calls
-  int64 duration = 6;
+  int64 duration = 7;
 
   // Machine hostname, container name etc
-  string hostname = 7;
+  string hostname = 8;
 
   // Origin of this annotation, likely a service or application for a RPC
-  string origin = 8;
+  string origin = 9;
 
   // Destination of this annotations action
   // eg. the service which a request was destined for
   // likely not set for annotations
-  string destination = 9;
+  string destination = 10;
 
   // Payload as a string - eg. JSON encoded
-  string payload = 10;
+  string payload = 11;
 
   // Repeated series of key value fields for arbitrary data
-  repeated KeyValue key_value = 11;
+  repeated KeyValue key_value = 12;
 }
 
 enum AnnotationType {
