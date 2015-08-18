@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"sort"
+
 	"github.com/mondough/phosphor/domain"
 	"github.com/mondough/phosphor/proto"
 )
@@ -12,6 +14,9 @@ func prettyFormatTrace(t *domain.Trace) interface{} {
 }
 
 func formatAnnotations(ans []*domain.Annotation) interface{} {
+
+	sort.Sort(ByTime(ans))
+
 	// Convert to proto
 	pa := domain.AnnotationsToProto(ans)
 
@@ -37,4 +42,16 @@ func formatAnnotation(a *proto.Annotation) interface{} {
 		"payload":     a.Payload,
 		"key_value":   a.KeyValue,
 	}
+}
+
+type ByTime []*domain.Annotation
+
+func (s ByTime) Len() int {
+	return len(s)
+}
+func (s ByTime) Swap(i, j int) {
+	s[i], s[j] = s[j], s[i]
+}
+func (s ByTime) Less(i, j int) bool {
+	return s[i].Timestamp.Before(s[j].Timestamp)
 }
