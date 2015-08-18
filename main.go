@@ -22,7 +22,7 @@ const (
 )
 
 var (
-	packetSize  = 512
+	packetSize  = 65536 - 8 - 20 // 8-byte UDP header, 20-byte IP header
 	bindAddress = "0.0.0.0:7760"
 
 	// forwarder defaults
