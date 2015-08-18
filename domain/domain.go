@@ -65,6 +65,7 @@ type Annotation struct {
 	Destination string // Optional: Fully qualified name of the message destination
 
 	AnnotationType AnnotationType // The type of Annotation
+	Async          bool           // If the request was fired asynchronously
 
 	Payload     string            // The payload, eg. RPC body, or Annotation
 	PayloadSize int32             // Bytes of payload

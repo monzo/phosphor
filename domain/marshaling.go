@@ -22,6 +22,7 @@ func ProtoToAnnotation(p *traceproto.Annotation) *Annotation {
 		Origin:         p.Origin,
 		Destination:    p.Destination,
 		AnnotationType: protoToAnnotationType(p.Type),
+		Async:          p.Async,
 		Payload:        p.Payload,
 		PayloadSize:    int32(len(p.Payload)),
 		KeyValue:       protoToKeyValue(p.KeyValue),
@@ -125,6 +126,7 @@ func AnnotationToProto(a *Annotation) *traceproto.Annotation {
 		SpanId:   a.SpanId,
 		ParentId: a.ParentSpanId,
 		Type:     annotationTypeToProto(a.AnnotationType),
+		Async:    a.Async,
 
 		Timestamp: timeToMicrosecondInt64(a.Timestamp),
 		Duration:  durationToMicrosecondInt64(a.Duration),

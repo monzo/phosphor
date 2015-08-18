@@ -34,6 +34,7 @@ func formatAnnotation(a *proto.Annotation) interface{} {
 		"span_id":     a.SpanId,
 		"parent_id":   a.ParentId,
 		"type":        a.Type.String(),
+		"async":       a.Async,
 		"timestamp":   a.Timestamp,
 		"duration":    a.Duration,
 		"hostname":    a.Hostname,
