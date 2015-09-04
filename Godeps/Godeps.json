@@ -1,0 +1,30 @@
+{
+	"ImportPath": "github.com/mondough/phosphor",
+	"GoVersion": "go1.4.1",
+	"Deps": [
+		{
+			"ImportPath": "code.google.com/p/snappy-go/snappy",
+			"Comment": "null-15",
+			"Rev": "12e4b4183793ac4b061921e7980845e750679fd0"
+		},
+		{
+			"ImportPath": "github.com/bitly/go-nsq",
+			"Comment": "v1.0.4-13-ga3aee1d",
+			"Rev": "a3aee1d8e104a99d8fedffe2c45832df6a96d735"
+		},
+		{
+			"ImportPath": "github.com/cihub/seelog",
+			"Comment": "go1.1-55-gc40fd0a",
+			"Rev": "c40fd0af694fa48ec870c030f495c26a5bffcf55"
+		},
+		{
+			"ImportPath": "github.com/golang/protobuf/proto",
+			"Rev": "16256d3ce6929458613798ee44b7914a3f59f5c6"
+		},
+		{
+			"ImportPath": "github.com/mreiferson/go-snappystream",
+			"Comment": "v0.2.2-8-ga5260a3",
+			"Rev": "a5260a307b3e7dd583283c1e2717445244d506c7"
+		}
+	]
+}
