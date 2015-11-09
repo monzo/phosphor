@@ -1,6 +1,6 @@
 syntax="proto3";
 
-package proto;
+package traceproto;
 
 message Annotation {
   // The ID of the trace this annotation is a component of

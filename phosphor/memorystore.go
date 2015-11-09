@@ -1,23 +1,21 @@
-package store
+package phosphor
 
 import (
 	"sync"
 	"time"
 
 	log "github.com/cihub/seelog"
-
-	"github.com/mondough/phosphor/domain"
 )
 
 type MemoryStore struct {
 	sync.RWMutex
-	traces map[string]*domain.Trace
+	traces map[string]*Trace
 }
 
 // NewMemoryStore initialises and returns a new MemoryStore
 func NewMemoryStore() *MemoryStore {
 	s := &MemoryStore{
-		traces: make(map[string]*domain.Trace),
+		traces: make(map[string]*Trace),
 	}
 
 	// run stats worker
@@ -27,7 +25,7 @@ func NewMemoryStore() *MemoryStore {
 }
 
 // ReadTrace retrieves a full Trace, composed of Annotations from the store by ID
-func (s *MemoryStore) ReadTrace(id string) (*domain.Trace, error) {
+func (s *MemoryStore) ReadTrace(id string) (*Trace, error) {
 	if s == nil {
 		return nil, ErrStoreNotInitialised
 	}
@@ -40,7 +38,7 @@ func (s *MemoryStore) ReadTrace(id string) (*domain.Trace, error) {
 
 // StoreAnnotation into the store, if the trace doesn't not already exist
 // this will be created for the global trace ID
-func (s *MemoryStore) StoreAnnotation(a *domain.Annotation) error {
+func (s *MemoryStore) StoreAnnotation(a *Annotation) error {
 	s.Lock()
 	defer s.Unlock()
 
@@ -59,7 +57,7 @@ func (s *MemoryStore) StoreAnnotation(a *domain.Annotation) error {
 
 	// Initialise a new trace if we don't have it already
 	if t == nil {
-		t = domain.NewTrace()
+		t = NewTrace()
 	}
 
 	// Add the new annotation to this

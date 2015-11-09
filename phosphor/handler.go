@@ -1,4 +1,4 @@
-package handler
+package phosphor
 
 import (
 	"encoding/json"
@@ -7,13 +7,11 @@ import (
 	"net/http"
 
 	log "github.com/cihub/seelog"
-
-	"github.com/mondough/phosphor/store"
-	"github.com/mondough/phosphor/util"
+	"github.com/mondough/phosphor/internal/version"
 )
 
 // DefaultStore is a reference to our persistence layer which we can query
-var DefaultStore store.Store
+var DefaultStore Store
 
 // Index
 // @todo return version information etc
@@ -22,7 +20,7 @@ func Index(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, fmt.Sprintf(`{
 		"name": "phosphor",
 		"version": "%s"
-	}`, util.VERSION))
+	}`, version.Version))
 }
 
 // TraceLookup retrieves a trace from the persistence layer

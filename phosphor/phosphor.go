@@ -1,4 +1,4 @@
-package main
+package phosphor
 
 import (
 	"flag"
@@ -7,10 +7,7 @@ import (
 
 	log "github.com/cihub/seelog"
 
-	"github.com/mondough/phosphor/handler"
-	"github.com/mondough/phosphor/ingester"
-	"github.com/mondough/phosphor/store"
-	"github.com/mondough/phosphor/util"
+	"github.com/mondough/phosphor/internal/util"
 )
 
 var HTTPPort = 7750
@@ -21,6 +18,24 @@ func init() {
 	flag.Var(&nsqLookupdHTTPAddrs, "nsq-lookupd-http-address", "nsqlookupd HTTP address (may be given multiple times)")
 }
 
+type phosphor struct {
+	Store Store
+}
+
+type PhosphorOptions struct {
+	Store Store
+}
+
+func New(opts *PhosphorOptions) *phosphor {
+	return &phosphor{
+		Store: opts.Store,
+	}
+}
+
+func (p *phosphor) Run() {
+
+}
+
 func main() {
 	log.Infof("Phosphor starting up")
 	defer log.Flush()
@@ -28,14 +43,13 @@ func main() {
 	flag.Parse()
 
 	// Initialise a persistent store
-	st := store.NewMemoryStore()
+	DefaultStore = NewMemoryStore()
 
 	// Initialise trace ingestion
-	go ingester.Run(nsqLookupdHTTPAddrs, st)
+	go RunIngester(nsqLookupdHTTPAddrs, DefaultStore)
 
 	// Set up API and serve requests
-	handler.DefaultStore = st
-	http.HandleFunc("/", handler.Index)
-	http.HandleFunc("/trace", handler.TraceLookup)
+	http.HandleFunc("/", Index)
+	http.HandleFunc("/trace", TraceLookup)
 	http.ListenAndServe(fmt.Sprintf(":%v", HTTPPort), nil)
 }

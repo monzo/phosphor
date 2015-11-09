@@ -1,4 +1,4 @@
-package ingester
+package phosphor
 
 import (
 	"fmt"
@@ -8,9 +8,7 @@ import (
 	log "github.com/cihub/seelog"
 	"github.com/golang/protobuf/proto"
 
-	"github.com/mondough/phosphor/domain"
 	traceproto "github.com/mondough/phosphor/proto"
-	"github.com/mondough/phosphor/store"
 )
 
 var (
@@ -22,7 +20,7 @@ var (
 )
 
 // Run the trace ingester, ingesting traces into the provided store
-func Run(nsqLookupdHTTPAddrs []string, st store.Store) {
+func RunIngester(nsqLookupdHTTPAddrs []string, st Store) {
 
 	cfg := nsq.NewConfig()
 	cfg.UserAgent = fmt.Sprintf("phosphor go-nsq/%s", nsq.VERSION)
@@ -50,7 +48,7 @@ func Run(nsqLookupdHTTPAddrs []string, st store.Store) {
 
 // IngestionHandler exists to match the NSQ handler interface
 type IngestionHandler struct {
-	store store.Store
+	store Store
 }
 
 // HandleMessage delivered by NSQ
@@ -64,7 +62,7 @@ func (ih *IngestionHandler) HandleMessage(message *nsq.Message) error {
 		return nil
 	}
 
-	a := domain.ProtoToAnnotation(p)
+	a := ProtoToAnnotation(p)
 	log.Debugf("Received annotation: %+v", a)
 
 	// Write to our store
