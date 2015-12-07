@@ -26,9 +26,9 @@ type PhosphorOptions struct {
 	Store Store
 }
 
-func New(opts *PhosphorOptions) *phosphor {
+func New(opts *Options) *phosphor {
 	return &phosphor{
-		Store: opts.Store,
+	// Store: opts.Store,
 	}
 }
 
