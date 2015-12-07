@@ -27,9 +27,11 @@ func (p *Phosphor) Run() {
 	defer log.Flush()
 
 	// Initialise a persistent store
-	if p.Store == nil {
-		p.Store = NewMemoryStore()
-	}
+	// if p.Store == nil {
+	p.Store = NewMemoryStore()
+	// }
+
+	DefaultStore = p.Store
 
 	// Initialise trace ingestion
 	go p.RunIngester()
