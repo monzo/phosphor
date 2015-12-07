@@ -14,6 +14,14 @@ type Options struct {
 	Verbose      bool   `flag:"verbose"`
 	HTTPAddress  string `flag:"http-address"`
 	HTTPSAddress string `flag:"https-address"`
+
+	// NSQ Transport options
+	NSQLookupdHTTPAddresses []string `flag:"nsqlookupd-http-address"`
+	NSQDHTTPAddresses       []string `flag:"nsqd-http-address"`
+	NSQTopicName            string   `flag:"nsq-topic"`
+	NSQChannelName          string   `flag:"nsq-channel"`
+	NSQMaxInflight          int      `flag:"nsq-max-inflight"`
+	NSQNumHandlers          int      `flag:"nsq-num-handlers"`
 }
 
 func NewOptions() *Options {
@@ -28,5 +36,12 @@ func NewOptions() *Options {
 
 	return &Options{
 		ID: defaultID,
+
+		HTTPAddress: "0.0.0.0:7750",
+
+		NSQTopicName:   "phosphor",
+		NSQChannelName: "phosphor-server",
+		NSQMaxInflight: 200,
+		NSQNumHandlers: 10,
 	}
 }

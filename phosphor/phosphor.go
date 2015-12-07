@@ -1,55 +1,50 @@
 package phosphor
 
 import (
-	"flag"
-	"fmt"
 	"net/http"
 
 	log "github.com/cihub/seelog"
-
-	"github.com/mondough/phosphor/internal/util"
 )
 
-var HTTPPort = 7750
-
-var nsqLookupdHTTPAddrs = util.StringArray{}
-
-func init() {
-	flag.Var(&nsqLookupdHTTPAddrs, "nsq-lookupd-http-address", "nsqlookupd HTTP address (may be given multiple times)")
-}
-
-type phosphor struct {
+type Phosphor struct {
+	opts  *Options
 	Store Store
+
+	exitChan chan struct{}
 }
 
-type PhosphorOptions struct {
-	Store Store
-}
+func New(opts *Options) *Phosphor {
+	return &Phosphor{
+		opts: opts,
+		// Store: opts.Store,
 
-func New(opts *Options) *phosphor {
-	return &phosphor{
-	// Store: opts.Store,
+		exitChan: make(chan struct{}),
 	}
 }
 
-func (p *phosphor) Run() {
-
-}
-
-func main() {
+func (p *Phosphor) Run() {
 	log.Infof("Phosphor starting up")
 	defer log.Flush()
 
-	flag.Parse()
-
 	// Initialise a persistent store
-	DefaultStore = NewMemoryStore()
+	if p.Store == nil {
+		p.Store = NewMemoryStore()
+	}
 
 	// Initialise trace ingestion
-	go RunIngester(nsqLookupdHTTPAddrs, DefaultStore)
+	go p.RunIngester()
 
 	// Set up API and serve requests
 	http.HandleFunc("/", Index)
 	http.HandleFunc("/trace", TraceLookup)
-	http.ListenAndServe(fmt.Sprintf(":%v", HTTPPort), nil)
+	go http.ListenAndServe(p.opts.HTTPAddress, nil)
+}
+
+func (p *Phosphor) Exit() {
+	log.Infof("Phosphor exiting")
+	select {
+	case <-p.exitChan: // check if already closed
+	default:
+		close(p.exitChan)
+	}
 }
