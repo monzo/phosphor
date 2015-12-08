@@ -6,12 +6,11 @@ import (
 	"fmt"
 	"net/http"
 
+	"golang.org/x/net/context"
+
 	log "github.com/cihub/seelog"
 	"github.com/mondough/phosphor/internal/version"
 )
-
-// DefaultStore is a reference to our persistence layer which we can query
-var DefaultStore Store
 
 // Index
 // @todo return version information etc
@@ -24,36 +23,43 @@ func Index(w http.ResponseWriter, r *http.Request) {
 }
 
 // TraceLookup retrieves a trace from the persistence layer
-func TraceLookup(w http.ResponseWriter, r *http.Request) {
-	traceId := r.URL.Query().Get("traceId")
-	if traceId == "" {
-		errorResponse(r, w, http.StatusBadRequest, errors.New("traceId param not provided"))
-		return
-	}
-
-	log.Debugf("Trace lookup - TraceId: %s", traceId)
-	t, err := DefaultStore.ReadTrace(traceId)
+func TraceLookup(ctx context.Context) func(http.ResponseWriter, *http.Request) {
+	p, err := phosphorFromContext(ctx)
 	if err != nil {
-		log.Errorf("Trace lookup failed: %s", err)
-		errorResponse(r, w, http.StatusInternalServerError, fmt.Errorf("could not load trace: %s", err))
-		return
+		panic(err)
 	}
 
-	// If we don't find the trace return 404
-	if t == nil {
-		log.Debugf("Trace not found: %s", traceId)
-		errorResponse(r, w, http.StatusNotFound, errors.New("traceId not found"))
-		return
-	}
+	return func(w http.ResponseWriter, r *http.Request) {
+		traceId := r.URL.Query().Get("traceId")
+		if traceId == "" {
+			errorResponse(r, w, http.StatusBadRequest, errors.New("traceId param not provided"))
+			return
+		}
 
-	// Return trace
-	response(
-		r,
-		w,
-		map[string]interface{}{
-			"trace": prettyFormatTrace(t),
-		},
-	)
+		log.Debugf("Trace lookup - TraceId: %s", traceId)
+		t, err := p.Store.ReadTrace(traceId)
+		if err != nil {
+			log.Errorf("Trace lookup failed: %s", err)
+			errorResponse(r, w, http.StatusInternalServerError, fmt.Errorf("could not load trace: %s", err))
+			return
+		}
+
+		// If we don't find the trace return 404
+		if t == nil {
+			log.Debugf("Trace not found: %s", traceId)
+			errorResponse(r, w, http.StatusNotFound, errors.New("traceId not found"))
+			return
+		}
+
+		// Return trace
+		response(
+			r,
+			w,
+			map[string]interface{}{
+				"trace": prettyFormatTrace(t),
+			},
+		)
+	}
 }
 
 // response sends the response back to the client, marshaling to JSON
