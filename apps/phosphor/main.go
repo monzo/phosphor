@@ -15,7 +15,7 @@ import (
 	"github.com/mreiferson/go-options"
 )
 
-func phosphorFlagset() *flag.FlagSet {
+func phosphorFlagSet() *flag.FlagSet {
 	flagSet := flag.NewFlagSet("phosphor", flag.ExitOnError)
 
 	// basic options
@@ -39,7 +39,7 @@ func phosphorFlagset() *flag.FlagSet {
 }
 
 func main() {
-	flagSet := phosphorFlagset()
+	flagSet := phosphorFlagSet()
 	flagSet.Parse(os.Args[1:])
 
 	// Globally seed rand
