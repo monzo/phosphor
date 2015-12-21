@@ -8,6 +8,8 @@ go:
 env:
   - GO15VENDOREXPERIMENT=1
 
+install: true
+
 script:
   - go build ./apps/phosphor
   - go build ./apps/phosphord
