@@ -5,7 +5,7 @@ import (
 	"net"
 	"time"
 
-	"github.com/mattheath/goprotobuf/proto"
+	"github.com/golang/protobuf/proto"
 
 	pb "github.com/mondough/phosphor/proto"
 )
