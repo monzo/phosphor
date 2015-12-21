@@ -1,11 +1,14 @@
 language: go
 
 go:
-  - 1.4
+  - 1.4.2
   - 1.5
   - tip
 
 env:
-- GO15VENDOREXPERIMENT=1
+  - GO15VENDOREXPERIMENT=1
 
-script: go test -v ./...
+script:
+  - go build ./apps/phosphor
+  - go build ./apps/phosphord
+  - go test -v ./...
