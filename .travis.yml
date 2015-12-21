@@ -11,6 +11,6 @@ env:
 install: true
 
 script:
-  - go install ./apps/phosphor
-  - go install ./apps/phosphord
-  - go test -v ./...
+  - "go install ./apps/phosphor"
+  - "go install ./apps/phosphord"
+  - "go test $(go list ./... | grep -v /vendor/)"
