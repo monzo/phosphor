@@ -7,7 +7,7 @@ import (
 	nsq "github.com/bitly/go-nsq"
 	log "github.com/cihub/seelog"
 
-	"github.com/mondough/phosphor/util"
+	"github.com/mondough/phosphor/internal/util"
 )
 
 var (
