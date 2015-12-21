@@ -11,6 +11,6 @@ env:
 install: true
 
 script:
-  - go build ./apps/phosphor
-  - go build ./apps/phosphord
+  - go install ./apps/phosphor
+  - go install ./apps/phosphord
   - go test -v ./...
