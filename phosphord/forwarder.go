@@ -47,26 +47,25 @@ func (p *PhosphorD) forward(id int) {
 
 			// Forward on if we're at our buffer size
 			if len(buf) >= p.opts.BufferSize {
-				p.sendTraces(id, buf)
+				p.sendTraces(id, &buf)
 			}
 		case <-timeoutTick.C:
-			p.sendTraces(id, buf)
+			p.sendTraces(id, &buf)
 		case <-metricsTick.C:
 			log.Debugf("[Forwarder %v] Processed %v messages", id, i)
 		}
 	}
 }
 
-func (p *PhosphorD) sendTraces(id int, buf [][]byte) error {
-
+func (p *PhosphorD) sendTraces(id int, buf *[][]byte) error {
 	// Don't publish empty buffers
-	if len(buf) == 0 {
+	if buf == nil || len(*buf) == 0 {
 		return nil
 	}
 
 	// Attempt to publish
-	log.Debugf("[Forwarder %v] Sending %v traces", id, len(buf))
-	if err := p.tr.MultiPublish(buf); err != nil {
+	log.Debugf("[Forwarder %v] Sending %v traces", id, len(*buf))
+	if err := p.tr.MultiPublish(*buf); err != nil {
 		// we return an error here, but currently ignore it
 		// therefore the behaviour will be reattempting to republish the
 		// buffer when the next trace arrives to this forwarder
@@ -74,7 +73,7 @@ func (p *PhosphorD) sendTraces(id int, buf [][]byte) error {
 	}
 
 	// Empty the buffer on success
-	buf = nil
+	*buf = nil
 
 	return nil
 }
