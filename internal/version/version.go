@@ -6,7 +6,7 @@ import (
 )
 
 // Version of the binaries
-const Version = "0.0.1-alpha"
+const Version = "0.0.1"
 
 // String returns our formatted version string
 func String(app string) string {
