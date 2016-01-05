@@ -1,4 +1,4 @@
-package ingester
+package phosphor
 
 import (
 	"fmt"
@@ -8,9 +8,7 @@ import (
 	log "github.com/cihub/seelog"
 	"github.com/golang/protobuf/proto"
 
-	"github.com/mondough/phosphor/domain"
 	traceproto "github.com/mondough/phosphor/proto"
-	"github.com/mondough/phosphor/store"
 )
 
 var (
@@ -22,35 +20,45 @@ var (
 )
 
 // Run the trace ingester, ingesting traces into the provided store
-func Run(nsqLookupdHTTPAddrs []string, st store.Store) {
-
+func (p *Phosphor) RunIngester() {
 	cfg := nsq.NewConfig()
 	cfg.UserAgent = fmt.Sprintf("phosphor go-nsq/%s", nsq.VERSION)
-	cfg.MaxInFlight = maxInFlight
+	cfg.MaxInFlight = p.opts.NSQMaxInflight
 
-	consumer, err := nsq.NewConsumer(topic, channel, cfg)
+	consumer, err := nsq.NewConsumer(p.opts.NSQTopicName, p.opts.NSQChannelName, cfg)
 	if err != nil {
 		log.Critical(err)
 		os.Exit(1)
 	}
 
 	consumer.AddConcurrentHandlers(&IngestionHandler{
-		store: st,
-	}, 10)
+		store: p.Store,
+	}, p.opts.NSQNumHandlers)
 
-	err = consumer.ConnectToNSQLookupds(nsqLookupdHTTPAddrs)
-	if err != nil {
-		log.Critical(err)
-		os.Exit(1)
+	if len(p.opts.NSQDHTTPAddresses) != 0 {
+		err = consumer.ConnectToNSQDs(p.opts.NSQDHTTPAddresses)
+		if err != nil {
+			log.Critical(err)
+			os.Exit(1)
+		}
+	} else {
+		err = consumer.ConnectToNSQLookupds(p.opts.NSQLookupdHTTPAddresses)
+		if err != nil {
+			log.Critical(err)
+			os.Exit(1)
+		}
 	}
 
 	// Block until exit
-	<-consumer.StopChan
+	select {
+	case <-consumer.StopChan:
+	case <-p.exitChan:
+	}
 }
 
 // IngestionHandler exists to match the NSQ handler interface
 type IngestionHandler struct {
-	store store.Store
+	store Store
 }
 
 // HandleMessage delivered by NSQ
@@ -64,7 +72,7 @@ func (ih *IngestionHandler) HandleMessage(message *nsq.Message) error {
 		return nil
 	}
 
-	a := domain.ProtoToAnnotation(p)
+	a := ProtoToAnnotation(p)
 	log.Debugf("Received annotation: %+v", a)
 
 	// Write to our store

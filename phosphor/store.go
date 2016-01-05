@@ -1,14 +1,10 @@
-package store
+package phosphor
 
-import (
-	"errors"
-
-	"github.com/mondough/phosphor/domain"
-)
+import "errors"
 
 type Store interface {
-	ReadTrace(id string) (*domain.Trace, error)
-	StoreAnnotation(a *domain.Annotation) error
+	ReadTrace(id string) (*Trace, error)
+	StoreAnnotation(a *Annotation) error
 }
 
 var (

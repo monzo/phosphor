@@ -3,7 +3,7 @@
 // DO NOT EDIT!
 
 /*
-Package proto is a generated protocol buffer package.
+Package traceproto is a generated protocol buffer package.
 
 It is generated from these files:
 	github.com/mondough/phosphor/proto/trace.proto
@@ -12,12 +12,16 @@ It has these top-level messages:
 	Annotation
 	KeyValue
 */
-package proto
+package traceproto
 
-import proto1 "github.com/golang/protobuf/proto"
+import proto "github.com/golang/protobuf/proto"
+import fmt "fmt"
+import math "math"
 
 // Reference imports to suppress errors if they are not otherwise used.
-var _ = proto1.Marshal
+var _ = proto.Marshal
+var _ = fmt.Errorf
+var _ = math.Inf
 
 type AnnotationType int32
 
@@ -51,7 +55,7 @@ var AnnotationType_value = map[string]int32{
 }
 
 func (x AnnotationType) String() string {
-	return proto1.EnumName(AnnotationType_name, int32(x))
+	return proto.EnumName(AnnotationType_name, int32(x))
 }
 
 type Annotation struct {
@@ -64,7 +68,7 @@ type Annotation struct {
 	// to correlate trace frames and reconstruct the request
 	ParentId string `protobuf:"bytes,3,opt,name=parent_id" json:"parent_id,omitempty"`
 	// The type of annotation we're capturing
-	Type AnnotationType `protobuf:"varint,4,opt,name=type,enum=proto.AnnotationType" json:"type,omitempty"`
+	Type AnnotationType `protobuf:"varint,4,opt,name=type,enum=traceproto.AnnotationType" json:"type,omitempty"`
 	// Flag to indicate this is an asynchronous span, which will not have a
 	// response - eg. just client send and server recv annotations
 	Async bool `protobuf:"varint,5,opt,name=async" json:"async,omitempty"`
@@ -89,7 +93,7 @@ type Annotation struct {
 }
 
 func (m *Annotation) Reset()         { *m = Annotation{} }
-func (m *Annotation) String() string { return proto1.CompactTextString(m) }
+func (m *Annotation) String() string { return proto.CompactTextString(m) }
 func (*Annotation) ProtoMessage()    {}
 
 func (m *Annotation) GetKeyValue() []*KeyValue {
@@ -105,9 +109,9 @@ type KeyValue struct {
 }
 
 func (m *KeyValue) Reset()         { *m = KeyValue{} }
-func (m *KeyValue) String() string { return proto1.CompactTextString(m) }
+func (m *KeyValue) String() string { return proto.CompactTextString(m) }
 func (*KeyValue) ProtoMessage()    {}
 
 func init() {
-	proto1.RegisterEnum("proto.AnnotationType", AnnotationType_name, AnnotationType_value)
+	proto.RegisterEnum("traceproto.AnnotationType", AnnotationType_name, AnnotationType_value)
 }
