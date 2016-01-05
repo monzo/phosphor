@@ -6,7 +6,7 @@ Phosphor is a Distributed Tracing system, similar to [Google's Dapper](https://r
 
 It is comprised of a few simple components:
 
- - Phosphor Client, used to send traces from applications
+ - [Phosphor Client](https://github.com/mondough/phosphor-go), used to send traces from applications
  - [Phosphor Daemon](https://github.com/mondough/phosphor/tree/master/phosphord), collects traces and forwards onto the main server
  - [Phosphor Server](https://github.com/mondough/phosphor/tree/master/phosphor), stores traces and aggregated trace information
  - Phosphor UI, view trace and debug information about your infrastructure
