@@ -15,6 +15,8 @@ It is comprised of a few simple components:
 
 ## Dependencies
 
+[![Join the chat at https://gitter.im/mattheath/phosphor](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/mattheath/phosphor?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
  - [NSQ](https://nsq.io) is used as the delivery transport between PhosphorD and the Phosphor Server
 
 ## Caveats
