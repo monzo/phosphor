@@ -13,7 +13,7 @@ It is comprised of a few simple components:
 
 ![Phosphor Architecture](docs/phosphor/outline.png)
 
-## Dependencies
+## Dependencies
 
  - [NSQ](https://nsq.io) is used as the delivery transport between PhosphorD and the Phosphor Server
 
